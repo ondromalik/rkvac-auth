@@ -240,6 +240,8 @@ router.get('/check-student-attribute', require('permission')(['admin']), (req, r
     }))
 });
 
+/* TCP Socket for changing epoch */
+
 let currentEpoch = "";
 let socket = new net.Socket();
 socket.setEncoding('utf-8');
@@ -257,7 +259,6 @@ socket.once('connect', function () {
         socket.write(data);
         currentEpoch = data;
     });
-    // socket.write("Hey");
 });
 socket.on('error', function (error) {
     console.log("Terminating connection");
@@ -270,7 +271,6 @@ socket.on('data', function (data) {
             console.log(err);
         }
     }));
-    // socket.end();
 });
 socket.on('end', function () {
     console.log("Disconnected from server");
@@ -285,6 +285,52 @@ socket.on('end', function () {
         }
         console.log(`stdout: ${stdout}`);
     });
+});
+
+/* TCP Socket for user revocation */
+
+async function updateBlacklist() {
+    return exec('./rkvac-protocol-multos-1.0.0 -v -u' + './data/Verifier/ra_BL_epoch_' + currentEpoch + '_C_for_verifier.dat', (error, stdout, stderr) => {
+        if (error) {
+            console.log(`stdout: ${stdout}`);
+            console.log(`error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+    });
+}
+
+const revokeServer = net.createServer((c) => {
+    // 'connection' listener.
+    console.log('client connected');
+    c.setEncoding('utf-8');
+    c.on('end', () => {
+        console.log('client disconnected');
+    });
+    c.on('data', function (data) {
+        console.log(data)
+        fs.appendFile('./data/Verifier/ra_BL_epoch_' + currentEpoch + '_C_for_verifier.dat', data, (err) => {
+            if (err) {
+                console.log(err);
+            }
+            console.log('Data written to ./data/Verifier/ra_BL_epoch_' + currentEpoch + '_C_for_verifier.dat');
+            updateBlacklist().then(() => {
+                console.log("Blacklist updated");
+                c.end();
+            });
+        });
+    });
+});
+revokeServer.on('error', (err) => {
+    throw err;
+});
+revokeServer.listen(5002, () => {
+    console.log('server bound');
 });
 
 router.post('/createNewEpoch', require('permission')(['admin']), (req, res) => {
