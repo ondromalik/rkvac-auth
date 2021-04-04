@@ -1,0 +1,37 @@
+extends layout
+
+block content
+    div.w3-container.w3-gray
+        div.w3-cell-row
+            div.w3-cell(style="width:80%")
+                h1 #{title}: #{department.fullname}
+            div.w3-cell.w3-cell-middle.w3-center
+                h5 Přihlášen: #[i #{username}]
+            div.w3-cell.w3-cell-middle
+                a.w3-button.w3-hover-none(href="/logout")
+                    i(class="fas fa-sign-out-alt fa-lg")
+
+    if department_classes.length
+        div.w3-container.w3-padding-16(style="margin-right:35%")
+            p #[strong Vymažte následujíci předměty, před vymazáním ústavu.]
+                table.w3-table-all
+                    thead
+                        tr.w3-light-gray
+                            th Zkratka
+                            th Název
+                    each Class in department_classes
+                        tr
+                            td #{Class.abbreviation}
+                            td
+                                a(href=Class.url) #{Class.title}
+    else
+        div.w3-cell-row.w3-padding
+            div.w3-cell
+                p Jste si jistý, že chcete vymazat tento ústav?
+            div.w3-cell
+                form(method='POST' action='')
+                    div.form-group
+                        input#departmentid.form-control(type='hidden', name='departmentid', required='true', value=department._id )
+
+                    button.w3-button.w3-border.w3-round-medium(type='submit') Vymaž
+            div.w3-cell(style="width:30%")

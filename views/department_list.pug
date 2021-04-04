@@ -1,0 +1,28 @@
+extends layout
+
+block content
+    div.w3-container.w3-gray
+        h1= title
+
+    //ul
+    //    each department in departments_list
+    //        li
+    //            a(href=department.url) #{department.title}
+    //
+    //    else
+    //        li There are no genre.
+
+    table.w3-table-all.w3-margin(style="width:95%")
+        thead
+            tr.w3-light-gray
+                th Zkratka
+                th Název
+        each department in departments_list
+            tr
+                td
+                    a(href=department.url) #{department.title}
+                td
+                    a(href=department.url) #{department.fullname}
+        else
+            tr
+                td Seznam ústavů je prázdný

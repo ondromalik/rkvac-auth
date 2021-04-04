@@ -1,0 +1,37 @@
+extends layout
+
+block content
+    div.w3-container.w3-gray
+        div.w3-cell-row
+            div.w3-cell(style="width:80%")
+                h1 #{department.fullname}
+            div.w3-cell.w3-cell-middle.w3-center
+                h5 Přihlášen: #[i #{username}]
+            div.w3-cell.w3-cell-middle
+                a.w3-button.w3-hover-none(href="/logout")
+                    i(class="fas fa-sign-out-alt fa-lg")
+
+    div.w3-container.w3-padding-16(style="margin-right:35%")
+        p #[strong Předměty na ústavu: ]
+        div
+            table.w3-table-all
+                thead
+                    tr.w3-light-gray
+                        th Zkratka
+                        th Název
+                each Class in department_classes
+                    tr
+                        td #{Class.abbreviation}
+                        td
+                            a(href=Class.url) #{Class.title}
+                else
+                    tr
+                        td Na tomto ústavu nejsou žádné předměty
+
+    div.w3-cell-row.w3-padding
+        div.w3-cell
+            a.w3-button.w3-border.w3-round-medium(href=department.url + '/update') Upravit
+        div.w3-cell
+            a.w3-button.w3-border.w3-round-medium(href=department.url + '/delete') Vymazat
+        div.w3-cell(style="width:80%")
+

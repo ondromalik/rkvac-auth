@@ -1,0 +1,28 @@
+extends layout
+
+block content
+    div.w3-container.w3-gray
+        div.w3-cell-row
+            div.w3-cell(style="width:80%")
+                h1 #{class_info.title}
+            div.w3-cell.w3-cell-middle.w3-center
+                h5 Přihlášen: #[i #{username}]
+            div.w3-cell.w3-cell-middle
+                a.w3-button.w3-hover-none(href="/logout")
+                    i(class="fas fa-sign-out-alt fa-lg")
+
+    div.w3-container.w3-padding-16(style="margin-right:35%")
+        p #[strong Vyučující: ]
+            a(href=class_info.teacher.url) #{class_info.teacher.name}
+        p #[strong Zkratka: ] #{class_info.abbreviation}
+        p #[strong Ústav: ]
+            a(href=class_info.department.url) #{class_info.department.title}
+        p #[strong Popis předmětu: ] #{class_info.summary}
+
+
+    div.w3-cell-row.w3-padding
+        div.w3-cell
+            a.w3-button.w3-border.w3-round-medium(href=class_info.url + '/update') Upravit
+        div.w3-cell
+            a.w3-button.w3-border.w3-round-medium(href=class_info.url + '/delete') Vymazat
+        div.w3-cell(style="width:80%")

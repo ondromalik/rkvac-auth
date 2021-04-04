@@ -1,0 +1,155 @@
+extends layout
+
+block content
+    div.w3-container.w3-gray
+        div.w3-cell-row
+            div.w3-cell(style="width:80%")
+                h1 Nastavení
+            div.w3-cell.w3-cell-middle.w3-center
+                h5 Přihlášen: #[i #{username}]
+            div.w3-cell.w3-cell-middle
+                a.w3-button.w3-hover-none(href="/logout")
+                    i(class="fas fa-sign-out-alt fa-lg")
+
+    div.w3-card-2.w3-margin-left.w3-margin-top(style="margin-right:35%" id="initiatingRKVAC")
+        header.w3-light-gray.w3-padding
+            h3 Inicializace aplikace RKVAC
+        div.w3-container.w3-padding
+            p Aplikace není inicializována. Pokračujte stisknutím tlačítka:
+            form(action="/initiateRKVAC" method="GET")
+                button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Inicializovat') Inicializovat
+
+
+    div.w3-card-2.w3-margin-left.w3-margin-top(style="margin-right:35%")
+        header.w3-light-gray.w3-padding
+            h3 Klíče entit RKVAC
+        div.w3-container.w3-padding
+            table.w3-table.w3-bordered
+                tr
+                    th Popis
+                    th Soubor
+                    th Akce
+                tr(id='upload-IE-SK')
+                    form(action="/uploadIEKey" method="POST" enctype="multipart/form-data")
+                        td(style="padding-left:16px") Soukromý klíč - vydavatel
+                        td
+                            input.w3-input(type='file' name='ie_sk.dat')
+                        td
+                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Nahrát') Nahrát
+                tr(id="delete-IE-SK" hidden=true)
+                    form(action="/deleteKey" method="POST")
+                        td(style="padding-left:16px") Soukromý klíč - vydavatel
+                        td ie_sk.dat
+                        td
+                            input(type="hidden" name="filename" value="Verifier/ie_sk.dat")
+                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit') Vymazat
+                tr(id='upload-RA-PK')
+                    form(action="/uploadRAKey" method="POST" enctype="multipart/form-data")
+                        td(style="padding-left:16px") Veřejný klíč - RA
+                        td
+                            input.w3-input(type='file' name='ra_pk.dat')
+                        td
+                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Nahrát') Nahrát
+                tr(id="delete-RA-PK" hidden=true)
+                    form(action="/deleteKey" method="POST")
+                        td(style="padding-left:16px") Veřejný klíč - RA
+                        td ra_pk.dat
+                        td
+                            input(type="hidden" name="filename" value="Verifier/ra_pk.dat")
+                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Vymazat') Vymazat
+                tr(id='upload-RA-PARAM')
+                    form(action="/uploadRAParams" method="POST" enctype="multipart/form-data")
+                        td(style="padding-left:16px") Veřejné parametry - RA
+                        td
+                            input.w3-input(type='file' name='ra_public_parameters.dat')
+                        td
+                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Nahrát') Nahrát
+                tr(id="delete-RA-PARAM" hidden=true)
+                    form(action="/deleteKey" method="POST")
+                        td(style="padding-left:16px") Veřejné parametry - RA
+                        td ra_public_parameters.dat
+                        td
+                            input(type="hidden" name="filename" value="Verifier/ra_public_parameters.dat")
+                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Vymazat') Vymazat
+
+    div.w3-card-2.w3-margin-left.w3-margin-top(style="margin-right:35%")
+        header.w3-light-gray.w3-padding
+            h3 Přístupová pověření
+        div.w3-container.w3-padding
+            table.w3-table.w3-bordered
+                tr
+                    th Role
+                    th Stav
+                    th Akce
+                tr
+                    td Admin
+                    td
+                        p.w3-text-green(id="adminReady" hidden=true) připraveno
+                        p.w3-text-red(id="adminNotReady") nepřipraveno
+                    td
+                        form(action="/deleteAttribute" method="POST")
+                            input(type="hidden" name="filename" value="DBAdmin.att")
+                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteAdminButton' disabled=true) Vymazat
+                tr
+                    td Vyučující
+                    td
+                        p.w3-text-green(id="teacherReady" hidden=true) připraveno
+                        p.w3-text-red(id="teacherNotReady") nepřipraveno
+                    td
+                        form(action="/deleteAttribute" method="POST")
+                            input(type="hidden" name="filename" value="DBTeacher.att")
+                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteTeacherButton' disabled=true) Vymazat
+                tr
+                    td Student
+                    td
+                        p.w3-text-green(id="studentReady" hidden=true) připraveno
+                        p.w3-text-red(id="studentNotReady") nepřipraveno
+                    td
+                        form(action="/deleteAttribute" method="POST")
+                            input(type="hidden" name="filename" value="DBStudent.att")
+                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteStudentButton' disabled=true) Vymazat
+        div.w3-card.w3-margin
+            div.w3-container.w3-padding.w3-gray
+                h4 Nové pověření
+            div.w3-container.w3-cell-row.w3-margin-left.w3-margin-top
+                div.w3-cell
+                    button.w3-button.w3-hover-gray.w3-border.w3-round-medium(onclick="changeAttributeType('admin')" id="adminButton") Admin
+                div.w3-cell
+                    button.w3-button.w3-hover-gray.w3-border.w3-round-medium(onclick="changeAttributeType('teacher')" id="teacherButton") Vyučující
+                div.w3-cell
+                    button.w3-button.w3-hover-gray.w3-border.w3-round-medium(onclick="changeAttributeType('student')" id="studentButton") Student
+            div.w3-container.w3-margin-bottom
+                form(action="/createAttribute" method="POST")
+                    input(type="hidden" name="userrole" value="" id="userrole")
+                    div.w3-panel
+                        label Atribut
+                        input.w3-input.w3-border.w3-round-medium(type="text" name="attribute" required="true")
+                    div.w3-panel
+                        button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' disabled=true id="newAttributeButton") Vytvořit
+
+    div.w3-card-2.w3-margin-left.w3-margin-top.w3-margin-bottom(style="margin-right:35%")
+        header.w3-light-gray.w3-padding
+            h3 Nastavení epochy
+        div.w3-container.w3-padding
+            form(action="/createNewEpoch" method="POST")
+                div.w3-panel
+                    label Adresa revokační autority:
+                    input.w3-input.w3-border.w3-round-medium(type="text" name="RAAddress" placeholder="localhost" required=true id="RAAddress")
+                div.w3-panel
+                    button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit') Nová epocha
+            div.w3-panel
+                label Časovač přechodu na novou epochu (ve formátu crontab):
+                input.w3-input.w3-border.w3-round-medium(type="text" id="cronTimer" placeholder="0 0 * * *")
+            div.w3-panel
+                button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id="scheduleEpochButton") Naplánovat pravidelní přechod
+            div.w3-panel
+                button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id="destroyEpochButton") Ukončit pravidelní přechod
+            div.w3-panel
+                label(hidden=true id="scheduleMessage")
+
+        //div.w3-container.w3-padding
+        //    form(action="/createNewEpoch" method="GET")
+        //        button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit') Vytvořit
+
+
+    script(src="setup.js")

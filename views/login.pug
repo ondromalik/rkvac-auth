@@ -1,0 +1,69 @@
+doctype html
+html(lang='en')
+    head
+        title= title
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css", integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z", crossorigin="anonymous")
+        script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js", integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj", crossorigin="anonymous")
+        script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js", integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV", crossorigin="anonymous")
+        link(rel='stylesheet', href='/stylesheets/style.css')
+    body(style="margin: 0 !important;padding: 0 !important")
+
+block content
+
+    div.w3-container.w3-centered.w3-margin-top(style="width: 33%; margin: auto")
+        div.w3-cell-row
+            div.w3-cell.w3-card-4
+                div.w3-container.w3-grey
+                    h2 Přihlášení
+                div.w3-padding
+                    h4 Přihlásit se jako:
+                    div.w3-cell-row.w3-center.w3-margin-top
+                        div.w3-cell(style="width: 33%")
+                            form(method='POST' action='/verify')
+                                input.w3-input.w3-border.w3-round-medium(name="username" type='hidden' value='admin')
+                                button.w3-button.w3-border.w3-round-medium.w3-padding-small(name='userrole' type='submit' value='admin' onclick='startLoader();connect()') Admin
+                        div.w3-cell(style="width: 33%")
+                            form(method='POST' action='/verify')
+                                input.w3-input.w3-border.w3-round-medium(name="username" type='hidden' value='teacher')
+                                button.w3-button.w3-border.w3-round-medium.w3-padding-small(name='userrole' type='submit' value='teacher' onclick='startLoader();connect()') Vyučující
+                        div.w3-cell(style="width: 33%")
+                            form(method='POST' action='/verify')
+                                input.w3-input.w3-border.w3-round-medium(name="username" type='hidden' value='student')
+                                button.w3-button.w3-border.w3-round-medium.w3-padding-small(name='userrole' type='submit' value='student' onclick='startLoader();connect()') Student
+                div.w3-center
+                    div(class="loader" id="login-loader" hidden=true)
+                    p
+                        label.w3-text-red(id="login-alert")= message
+                hr
+                div.w3-padding
+                    div.w3-cell-row
+                        div.w3-cell
+                            h4 Čtečka karet:
+                        div.w3-cell.w3-right-align
+                            button.w3-button.w3-border.w3-round-medium.w3-padding-small(id="testCard" onclick="testReader()" hidden=true) Test
+                    div.w3-center.w3-margin-top
+                        label.w3-text-red(id="cardStatus") Čtečka nedostupná
+                        div(id="readerList")
+                        label.w3-text-green(id="cardConnected" hidden=true) Karta je funkční
+                        label.w3-text-red(id="cardDisconnected" hidden=true) Karta není funkční
+                hr
+                div.w3-container.w3-padding
+                    button.w3-button.w3-padding-small(onclick='showPanel("showLogin")') #[i Lokální přihlášení]
+
+                    form.w3-container.w3-margin-top(action="/login" method="POST" style="padding-bottom: 16px" class="w3-hide" id="showLogin")
+                        p
+                            label Jméno
+                            input.w3-input.w3-border.w3-round-medium(name="username")
+                        p
+                            label Heslo
+                            input.w3-input.w3-border.w3-round-medium(type="password" name="password")
+                        p
+                            input.w3-button.w3-border.w3-round-medium.w3-padding-small(type="submit" value="Přihlásit")
+
+
+    script(src='login.js')
+    script(src="webcard.js")
+    script(src="websocket.js")
+

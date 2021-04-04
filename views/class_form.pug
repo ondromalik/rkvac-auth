@@ -1,0 +1,49 @@
+extends layout
+
+block content
+    div.w3-container.w3-gray
+        div.w3-cell-row
+            div.w3-cell(style="width:80%")
+                h1 #{title}
+            div.w3-cell.w3-cell-middle.w3-center
+                h5 Přihlášen: #[i #{username}]
+            div.w3-cell.w3-cell-middle
+                a.w3-button.w3-hover-none(href="/logout")
+                    i(class="fas fa-sign-out-alt fa-lg")
+
+    div.w3-container.w3-padding-16(style="margin-right:35%")
+        form.w3-container(method='POST' action='' style="padding-bottom: 16px")
+            div.form-group
+                label(for='title') Název:
+                input#title.form-control(class="w3-input;w3-border;w3-round-medium" type='text', name='title' required='true' value=(undefined === class_info ? '' : class_info.title) )
+            div.form-group
+                label(for='teacher') Vyučující:
+                select#teacher.form-control(class="w3-select;w3-border;w3-round-medium" type='select', name='teacher' required='true' )
+                    - teachers.sort(function(a, b) {let textA = a.surname.toUpperCase(); let textB = b.surname.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+                    for teacher in teachers
+                        if class_info
+                            option(value=teacher._id selected=(teacher._id.toString() === class_info.teacher._id.toString() ? 'selected' : false) ) #{teacher.name}
+                        else
+                            option(value=teacher._id) #{teacher.name}
+            div.form-group
+                label(for='summary') Popis:
+                textarea#summary.form-control(class="w3-input;w3-border;w3-round-medium" type='textarea', name='summary' required='true') #{undefined === class_info ? '' : class_info.summary}
+            div.form-group
+                label(for='abbreviation') Zkratka:
+                input#abbreviation.form-control(class="w3-input;w3-border;w3-round-medium" type='text', name='abbreviation' value=(undefined === class_info ? '' : class_info.abbreviation) required='true')
+            div.form-group
+                label(for='department') Ústav:
+                select#department.form-control(class="w3-select;w3-border;w3-round-medium" type='select', name='department' required='true' )
+                    - departments.sort(function(a, b) {let textA = a.title.toUpperCase(); let textB = b.title.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+                    for department in departments
+                        if class_info
+                            option(value=department._id selected=(department._id.toString() === class_info.department._id.toString() ? 'selected' : false) ) #{department.title}
+                        else
+                            option(value=department._id) #{department.title}
+            div.w3-right-align.w3-margin-top
+                button.w3-button.w3-border.w3-round-medium(type='submit') Vytvoř
+
+        if errors
+            ul
+                for error in errors
+                    li!= error.msg

@@ -1,0 +1,31 @@
+doctype html
+html(lang='en')
+    head
+        title= title
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        link(rel="stylesheet", href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css", integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z", crossorigin="anonymous")
+        script(src="https://code.jquery.com/jquery-3.5.1.slim.min.js", integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj", crossorigin="anonymous")
+        script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js", integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV", crossorigin="anonymous")
+        script(src="webcard.js")
+        script(src="websocket.js")
+        link(rel='stylesheet', href='/stylesheets/style.css')
+    body(style="margin: 0 !important;padding: 0 !important")
+
+        div.w3-sidebar.w3-bar-block.w3-dark-gray(style="width:15%")
+            block sidebar
+                a.w3-bar-item.w3-button(href='/' style="text-decoration: none") Domov
+                a.w3-bar-item.w3-button(href='/classes' style="text-decoration: none") Předměty
+                a.w3-bar-item.w3-button(href='/teachers' style="text-decoration: none") Vyučující
+                a.w3-bar-item.w3-button(href='/departments' style="text-decoration: none") Ústavy
+                if username === 'admin' || username === 'teacher'
+                    hr
+                    a.w3-bar-item.w3-button(href='/class/create' style="text-decoration: none") Nový předmět
+                    a.w3-bar-item.w3-button(href='/teacher/create' style="text-decoration: none") Nový vyučující
+                    a.w3-bar-item.w3-button(href='/department/create' style="text-decoration: none") Nový ústav
+                if username === 'admin'
+                    hr
+                    a.w3-bar-item.w3-button(href='/setup' style="text-decoration: none") Nastavení
+
+        div(style="margin-left:15%")
+            block content

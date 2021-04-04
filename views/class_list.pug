@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    div.w3-container.w3-gray
+        h1= title
+
+    table.w3-table-all.w3-margin(style="width:95%")
+        thead
+            tr.w3-light-gray
+                th Zkratka
+                th Název
+                th Vyučující
+        - class_list.sort(function(a, b) {let textA = a.title.toUpperCase(); let textB = b.title.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+         each Class in class_list
+             tr
+                 td #{Class.abbreviation}
+                 td
+                     a(href=Class.url) #{Class.title}
+                 td #{Class.teacher.name}
+
+         else
+            tr
+                td Seznam předmětů je prázdný
