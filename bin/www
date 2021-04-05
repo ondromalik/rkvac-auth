@@ -109,7 +109,7 @@ wss.on('connection', function connection(ws) {
   };
 
   client.once('connect', function () {
-    console.log('Connected to server!');
+    console.log('Connected to RKVAC!');
   });
   client.on('error', function (error) {
     if (error.code === 'ECONNREFUSED') {
@@ -130,11 +130,6 @@ wss.on('connection', function connection(ws) {
   client.on('data', function (data) {
     ws.send(data);
   });
-  // client.setTimeout(10000);
-  // client.on('timeout', () => {
-  //   console.log("Terminating connection");
-  //   client.destroy();
-  // });
   client.on('end', function () {
     console.log("Disconnected from server");
   });

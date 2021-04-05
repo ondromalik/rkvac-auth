@@ -71,11 +71,13 @@ passport.use('verify', new LocalStrategy(
         exec(command, (error, stdout, stderr) => {
             if (error) {
                 console.log(`error: ${error.message}`);
+                console.log(`stdout: ${stdout}`);
                 done(null, false, {message: 'Přístup odepřen'});
                 return;
             }
             if (stderr) {
                 console.log(`stderr: ${stderr}`);
+                console.log(`stdout: ${stdout}`);
                 done(null, false, {message: 'Přístup odepřen'});
                 return;
             }

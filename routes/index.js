@@ -313,7 +313,6 @@ const revokeServer = net.createServer((c) => {
         console.log('client disconnected');
     });
     c.on('data', function (data) {
-        console.log(data)
         fs.appendFile('./data/Verifier/ra_BL_epoch_' + currentEpoch + '_C_for_verifier.dat', data, (err) => {
             if (err) {
                 console.log(err);
@@ -468,10 +467,12 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
     exec(command, {timeout: 3000}, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
+            console.log(`stdout: ${stdout}`);
             return;
         }
         if (stderr) {
             console.log(`stderr: ${stderr}`);
+            console.log(`stdout: ${stdout}`);
             return;
         }
         console.log(`stdout: ${stdout}`);

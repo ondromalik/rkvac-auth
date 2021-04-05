@@ -197,6 +197,10 @@
         }
     })
 
+    document.getElementById('connectButton').addEventListener(('click'), () => {
+        connect();
+    })
+
     document.getElementById('destroyEpochButton').addEventListener('click', () => {
         let message = document.getElementById('scheduleMessage');
         fetch('/destroyEpoch', {
