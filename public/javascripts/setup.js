@@ -132,11 +132,9 @@
         });
     }
 
-    // window.onbeforeunload = checkRA();
     window.onload = checkKeys;
 
     function changeAttributeType(buttonType) {
-        console.log('clicked');
         document.getElementById("userrole").value = buttonType;
         document.getElementById('adminButton').className = document.getElementById('adminButton').className.replace('w3-gray', "");
         document.getElementById('teacherButton').className = document.getElementById('teacherButton').className.replace('w3-gray', '');
@@ -145,8 +143,40 @@
         document.getElementById('newAttributeButton').disabled = false;
     }
 
+
     document.getElementById('newAttributeButton').addEventListener('click', () => {
-        connect();
+        let userrole = document.getElementById("userrole").value;
+        let attribute = document.getElementById('newAttribute').value;
+        if (attribute === "") {
+            document.getElementById('newAttributeMessageError').innerHTML = "Název atributu nesmí být prázdny";
+            document.getElementById('newAttributeMessageError').hidden = false;
+        }
+        else {
+            let newAttribute = {
+                userrole: userrole,
+                attribute: attribute
+            };
+            fetch('/createAttribute', {
+                method: 'POST',
+                body: JSON.stringify(newAttribute),
+                headers: { 'Content-Type': 'application/json'}
+            }).then((response) => {
+                response.json().then((data) => {
+                    if (data.success) {
+                        document.getElementById('newAttributeMessageOK').hidden = false;
+                        return;
+                    }
+                    if (!data.success) {
+                        document.getElementById('newAttributeMessageError').hidden = false;
+                        return;
+                    }
+                    throw new Error('Request failed.');
+                }).catch((error) => {
+                    console.log(error);
+                });
+            });
+            connect();
+        }
     })
 
     document.getElementById('scheduleEpochButton').addEventListener('click', () => {

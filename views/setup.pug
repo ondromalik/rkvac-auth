@@ -108,7 +108,6 @@ block content
                         form(action="/deleteAttribute" method="POST")
                             input(type="hidden" name="filename" value="DBStudent.att")
                             button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteStudentButton' disabled=true) Vymazat
-            button(id='connectButton') Pripoj
         div.w3-card.w3-margin
             div.w3-container.w3-padding.w3-gray
                 h4 Nové pověření
@@ -120,13 +119,17 @@ block content
                 div.w3-cell
                     button.w3-button.w3-hover-gray.w3-border.w3-round-medium(onclick="changeAttributeType('student')" id="studentButton") Student
             div.w3-container.w3-margin-bottom
-                form(action="/createAttribute" method="POST")
-                    input(type="hidden" name="userrole" value="" id="userrole")
-                    div.w3-panel
-                        label Atribut
-                        input.w3-input.w3-border.w3-round-medium(type="text" name="attribute" required="true")
-                    div.w3-panel
-                        button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' disabled=true id="newAttributeButton") Vytvořit
+                //form(action="/createAttribute" method="POST")
+                input(type="hidden" name="userrole" value="" id="userrole")
+                div.w3-panel
+                    label Atribut
+                    input.w3-input.w3-border.w3-round-medium(type="text" id="newAttribute")
+                div.w3-panel
+                    button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(disabled=true id="newAttributeButton") Vytvořit
+                div.w3-panel
+                    label.w3-text-green(hidden=true id="newAttributeMessageOK") Pověření úspěšne vytvořené
+                div.w3-panel
+                    label.w3-text-red(hidden=true id="newAttributeMessageError")
 
     div.w3-card-2.w3-margin-left.w3-margin-top.w3-margin-bottom(style="margin-right:35%")
         header.w3-light-gray.w3-padding
@@ -140,6 +143,8 @@ block content
                     button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit') Nová epocha
             div.w3-panel
                 label Časovač přechodu na novou epochu (ve formátu crontab):
+                    a.w3-button.w3-hover-none(href="https://crontab.guru/" target="_blank")
+                        i(class="fas fa-question-circle")
                 input.w3-input.w3-border.w3-round-medium(type="text" id="cronTimer" placeholder="0 0 * * *")
             div.w3-panel
                 button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id="scheduleEpochButton") Naplánovat pravidelní přechod

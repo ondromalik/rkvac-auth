@@ -464,20 +464,21 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
             break;
     }
     command += "./rkvac-protocol-multos-1.0.0 -v -a " + attribFile;
-    exec(command, {timeout: 3000}, (error, stdout, stderr) => {
-        if (error) {
-            console.log(`error: ${error.message}`);
-            console.log(`stdout: ${stdout}`);
-            return;
-        }
-        if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            console.log(`stdout: ${stdout}`);
-            return;
-        }
-        console.log(`stdout: ${stdout}`);
-    });
-    res.redirect('/setup');
+    // exec(command, {timeout: 3000}, (error, stdout, stderr) => {
+    //     if (error) {
+    //         console.log(`error: ${error.message}`);
+    //         console.log(`stdout: ${stdout}`);
+    //         return;
+    //     }
+    //     if (stderr) {
+    //         console.log(`stderr: ${stderr}`);
+    //         console.log(`stdout: ${stdout}`);
+    //         return;
+    //     }
+    //     console.log(`stdout: ${stdout}`);
+    // });
+    console.log(command);
+    res.json({success: true});
 });
 
 
