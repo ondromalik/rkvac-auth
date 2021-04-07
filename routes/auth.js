@@ -2,6 +2,10 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 const crypto = require('crypto');
 const {exec} = require("child_process");
+var indexRouter = require('./index.js');
+
+let disclosedAttributes = "1";
+exports.disclosedAttributes = disclosedAttributes;
 
 var userDB = {
     user: [
@@ -52,6 +56,7 @@ passport.use('login', new LocalStrategy(
     }
 ));
 
+
 passport.use('verify', new LocalStrategy(
     {passwordField: 'userrole', passReqToCallback: true},
     function (req, username, password, done) {
@@ -67,7 +72,8 @@ passport.use('verify', new LocalStrategy(
                 requestedAccess = 'DBStudent.att';
                 break;
         }
-        var command = "printf '1\\n' | ./rkvac-protocol-multos-1.0.0 -v -a " + requestedAccess;
+        var disclosedAttributes = indexRouter.getDisclosedAttributes();
+        var command = "printf '" + disclosedAttributes + "\\n' | ./rkvac-protocol-multos-1.0.0 -v -a " + requestedAccess;
         exec(command, (error, stdout, stderr) => {
             if (error) {
                 console.log(`error: ${error.message}`);

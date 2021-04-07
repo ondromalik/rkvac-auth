@@ -122,8 +122,25 @@ block content
                 //form(action="/createAttribute" method="POST")
                 input(type="hidden" name="userrole" value="" id="userrole")
                 div.w3-panel
-                    label Atribut
-                    input.w3-input.w3-border.w3-round-medium(type="text" id="newAttribute")
+                    //label Atribut
+                    //input.w3-input.w3-border.w3-round-medium(type="text" id="newAttribute")
+                    p
+                        label Počet atribútov
+                        select.w3-select.w3-border.w3-round-medium(id="attributeCount" name="attributeCount")
+                            option(value="" selected="selected" disabled) Vyberte počet
+                            option(value="1") 1
+                            option(value="2") 2
+                            option(value="3") 3
+                            option(value="4") 4
+                            option(value="5") 5
+                            option(value="6") 6
+                            option(value="7") 7
+                            option(value="8") 8
+                            option(value="9") 9
+                    p(id="ownAttributes")
+                div.w3-panel
+                    label Zadejte odhalené atribůty:
+                    input.w3-input.w3-border.w3-round-medium(type="text" id="disclosedAttributes" placeholder="napr. 2,3")
                 div.w3-panel
                     button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(disabled=true id="newAttributeButton") Vytvořit
                 div.w3-panel

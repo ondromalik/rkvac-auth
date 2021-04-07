@@ -143,19 +143,54 @@
         document.getElementById('newAttributeButton').disabled = false;
     }
 
+    /* Changing attributes form */
+    const attributeCount = document.getElementById('attributeCount');
+    const ownAttributes = document.getElementById('ownAttributes');
+    attributeCount.addEventListener('change', function () {
+        let selectedValue = attributeCount.value;
+
+        while (ownAttributes.firstChild) {
+            ownAttributes.removeChild(ownAttributes.firstChild);
+        }
+
+        for (let i = 0; i < selectedValue; i++) {
+            let label = document.createElement("label");
+            label.innerHTML = "Název #" + (i + 1);
+            // label.setAttribute("class", "labels");
+
+            let input = document.createElement("input");
+            input.setAttribute("class", "w3-input w3-border w3-round-medium w3-margin-bottom");
+            let newID = toString(i);
+            input.id = "own" + i;
+
+            ownAttributes.appendChild(label);
+            ownAttributes.appendChild(input);
+        }
+    });
 
     document.getElementById('newAttributeButton').addEventListener('click', () => {
         let userrole = document.getElementById("userrole").value;
-        let attribute = document.getElementById('newAttribute').value;
-        if (attribute === "") {
-            document.getElementById('newAttributeMessageError').innerHTML = "Název atributu nesmí být prázdny";
-            document.getElementById('newAttributeMessageError').hidden = false;
-        }
-        else {
+        // let attribute = document.getElementById('newAttribute').value;
+        let attributeCount = document.getElementById('attributeCount').value;
+        let disclosedAttributes = document.getElementById('disclosedAttributes').value;
+        // if (attribute === "") {
+        //     document.getElementById('newAttributeMessageError').innerHTML = "Název atributu nesmí být prázdny";
+        //     document.getElementById('newAttributeMessageError').hidden = false;
+        // }
+        // else {
             let newAttribute = {
                 userrole: userrole,
-                attribute: attribute
+                attributeCount: attributeCount,
+                disclosedAttributes: disclosedAttributes
             };
+
+            for (let i = 0; i < attributeCount; i++) {
+                let id = 'own' + i;
+                let attribName = 'own' + i;
+                newAttribute[attribName] = document.getElementById(id).value;
+                document.getElementById(id).value = "";
+            }
+
             fetch('/createAttribute', {
                 method: 'POST',
                 body: JSON.stringify(newAttribute),
@@ -176,7 +211,7 @@
                 });
             });
             connect();
-        }
+        // }
     })
 
     document.getElementById('scheduleEpochButton').addEventListener('click', () => {

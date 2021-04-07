@@ -449,9 +449,21 @@ router.post('/uploadRAParams', require('permission')(['admin']), (req, res) => {
     });
 });
 
+let disclosedAttributes = "";
+function getDisclosedAttributes() {
+    return disclosedAttributes;
+}
+module.exports.getDisclosedAttributes = getDisclosedAttributes;
+
 router.post('/createAttribute', require('permission')(['admin']), (req, res) => {
     let attribFile = "";
-    var command = "printf '4\\n1\\n" + req.body.attribute + "\\n^C' | ";
+    var command = "printf '4\\n" + req.body.attributeCount + "\\n";
+    for (let i = 0; i < req.body.attributeCount; i++) {
+        let attribName = 'own' + i;
+        command += req.body[attribName];
+        command += "\\n";
+    }
+    command += "^C' | ";
     switch (req.body.userrole) {
         case "admin":
             attribFile = "DBAdmin.att";
@@ -463,21 +475,21 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
             attribFile = "DBStudent.att";
             break;
     }
+    disclosedAttributes = req.body.disclosedAttributes;
     command += "./rkvac-protocol-multos-1.0.0 -v -a " + attribFile;
-    // exec(command, {timeout: 3000}, (error, stdout, stderr) => {
-    //     if (error) {
-    //         console.log(`error: ${error.message}`);
-    //         console.log(`stdout: ${stdout}`);
-    //         return;
-    //     }
-    //     if (stderr) {
-    //         console.log(`stderr: ${stderr}`);
-    //         console.log(`stdout: ${stdout}`);
-    //         return;
-    //     }
-    //     console.log(`stdout: ${stdout}`);
-    // });
-    console.log(command);
+    exec(command, {timeout: 3000}, (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            console.log(`stdout: ${stdout}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            console.log(`stdout: ${stdout}`);
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+    });
     res.json({success: true});
 });
 
