@@ -210,7 +210,7 @@
                     console.log(error);
                 });
             });
-            connect();
+            // connect();
         // }
     })
 

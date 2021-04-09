@@ -465,6 +465,7 @@ module.exports.getDisclosedAttributes = getDisclosedAttributes;
 
 router.post('/createAttribute', require('permission')(['admin']), (req, res) => {
     let attribFile = "";
+    let positionFile = "";
     var command = "printf '4\\n" + req.body.attributeCount + "\\n";
     for (let i = 0; i < req.body.attributeCount; i++) {
         let attribName = 'own' + i;
@@ -475,15 +476,17 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
     switch (req.body.userrole) {
         case "admin":
             attribFile = "DBAdmin.att";
+            positionFile = "adminPosition.txt";
             break;
         case "teacher":
             attribFile = "DBTeacher.att";
+            positionFile = "teacherPosition.txt";
             break;
         case "student":
             attribFile = "DBStudent.att";
+            positionFile = "studentPosition.txt";
             break;
     }
-    disclosedAttributes = req.body.disclosedAttributes;
     command += "./rkvac-protocol-multos-1.0.0 -v -a " + attribFile;
     exec(command, {timeout: 3000}, (error, stdout, stderr) => {
         if (error) {
@@ -497,6 +500,13 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
             return;
         }
         console.log(`stdout: ${stdout}`);
+    });
+    fs.writeFile(positionFile, req.body.disclosedAttributes, (err) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.log("Disclosed attributes details written to " + req.body.disclosedAttributes);
     });
     res.json({success: true});
 });
