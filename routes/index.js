@@ -457,12 +457,6 @@ router.post('/uploadRAParams', require('permission')(['admin']), (req, res) => {
     });
 });
 
-let disclosedAttributes = "";
-function getDisclosedAttributes() {
-    return disclosedAttributes;
-}
-module.exports.getDisclosedAttributes = getDisclosedAttributes;
-
 router.post('/createAttribute', require('permission')(['admin']), (req, res) => {
     let attribFile = "";
     let positionFile = "";
@@ -472,19 +466,19 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
         command += req.body[attribName];
         command += "\\n";
     }
-    command += "^C' | ";
+    command += "' | ";
     switch (req.body.userrole) {
         case "admin":
             attribFile = "DBAdmin.att";
-            positionFile = "adminPosition.txt";
+            positionFile = "./data/Verifier/adminPosition.txt";
             break;
         case "teacher":
             attribFile = "DBTeacher.att";
-            positionFile = "teacherPosition.txt";
+            positionFile = "./data/Verifier/teacherPosition.txt";
             break;
         case "student":
             attribFile = "DBStudent.att";
-            positionFile = "studentPosition.txt";
+            positionFile = "./data/Verifier/studentPosition.txt";
             break;
     }
     command += "./rkvac-protocol-multos-1.0.0 -v -a " + attribFile;
@@ -495,8 +489,8 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
             return;
         }
         if (stderr) {
-            console.log(`stderr: ${stderr}`);
             console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
             return;
         }
         console.log(`stdout: ${stdout}`);
@@ -506,7 +500,7 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
             console.log(err);
             return;
         }
-        console.log("Disclosed attributes details written to " + req.body.disclosedAttributes);
+        console.log("Disclosed attributes details written to " + positionFile);
     });
     res.json({success: true});
 });

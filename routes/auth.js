@@ -2,10 +2,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 const crypto = require('crypto');
 const {exec} = require("child_process");
-var indexRouter = require('./index.js');
-
-let disclosedAttributes = "1";
-exports.disclosedAttributes = disclosedAttributes;
+const fs = require('fs');
 
 var userDB = {
     user: [
@@ -56,44 +53,52 @@ passport.use('login', new LocalStrategy(
     }
 ));
 
-
 passport.use('verify', new LocalStrategy(
     {passwordField: 'userrole', passReqToCallback: true},
     function (req, username, password, done) {
         let requestedAccess;
+        let positionFile = "";
         switch (req.body.userrole) {
             case 'admin':
                 requestedAccess = 'DBAdmin.att';
+                positionFile = "./data/Verifier/adminPosition.txt";
                 break;
             case 'teacher':
                 requestedAccess = 'DBTeacher.att';
+                positionFile = "./data/Verifier/teacherPosition.txt";
                 break;
             case 'student':
                 requestedAccess = 'DBStudent.att';
+                positionFile = "./data/Verifier/studentPosition.txt";
                 break;
         }
-        var disclosedAttributes = indexRouter.getDisclosedAttributes();
-        var command = "printf '" + disclosedAttributes + "\\n' | ./rkvac-protocol-multos-1.0.0 -v -a " + requestedAccess;
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                console.log(`error: ${error.message}`);
-                console.log(`stdout: ${stdout}`);
-                done(null, false, {message: 'Přístup odepřen'});
-                return;
+        fs.readFile(positionFile, (err, data) => {
+            if (err) {
+                console.log(err);
+                done(null, false, {message: 'Přístup odepřen - chyba v RKVAC'});
             }
-            if (stderr) {
-                console.log(`stderr: ${stderr}`);
-                console.log(`stdout: ${stdout}`);
-                done(null, false, {message: 'Přístup odepřen'});
-                return;
-            }
-            console.log(`stdout: ${stdout}`);
-            for (user of userDB.user) {
-                if (user.username === username) {
-                    return done(null, user);
+            var command = "printf '" + data + "\\n' | ./rkvac-protocol-multos-1.0.0 -v -a " + requestedAccess;
+            exec(command, (error, stdout, stderr) => {
+                if (error) {
+                    console.log(`error: ${error.message}`);
+                    console.log(`stdout: ${stdout}`);
+                    done(null, false, {message: 'Přístup odepřen'});
+                    return;
                 }
-            }
-        });
+                if (stderr) {
+                    console.log(`stderr: ${stderr}`);
+                    console.log(`stdout: ${stdout}`);
+                    done(null, false, {message: 'Přístup odepřen'});
+                    return;
+                }
+                console.log(`stdout: ${stdout}`);
+                for (user of userDB.user) {
+                    if (user.username === username) {
+                        return done(null, user);
+                    }
+                }
+            });
+        })
     }
 ));
 
