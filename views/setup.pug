@@ -12,7 +12,7 @@ block content
                     i(class="fas fa-sign-out-alt fa-lg")
 
     div.w3-card-2.w3-margin-left.w3-margin-top(style="margin-right:35%" id="initiatingRKVAC")
-        header.w3-light-gray.w3-padding
+        header.w3-gray.w3-padding
             h3 Inicializace aplikace RKVAC
         div.w3-container.w3-padding
             p Aplikace není inicializována. Pokračujte stisknutím tlačítka:
@@ -21,7 +21,7 @@ block content
 
 
     div.w3-card-2.w3-margin-left.w3-margin-top(style="margin-right:35%")
-        header.w3-light-gray.w3-padding
+        header.w3-light-grey.w3-padding(id="keyPanel")
             h3 Klíče entit RKVAC
         div.w3-container.w3-padding
             table.w3-table.w3-bordered
@@ -73,7 +73,7 @@ block content
                             button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Vymazat') Vymazat
 
     div.w3-card-2.w3-margin-left.w3-margin-top(style="margin-right:35%")
-        header.w3-light-gray.w3-padding
+        header.w3-light-grey.w3-padding(id="attributePanel")
             h3 Přístupová pověření
         div.w3-container.w3-padding
             table.w3-table.w3-bordered
@@ -110,7 +110,7 @@ block content
                             button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteStudentButton' disabled=true) Vymazat
 
         div.w3-card.w3-margin
-            div.w3-container.w3-padding.w3-gray
+            div.w3-container.w3-padding.w3-light-grey(id="newAttributePanel")
                 h4 Nové pověření
             div.w3-container.w3-cell-row.w3-margin-left.w3-margin-top
                 div.w3-cell
@@ -148,7 +148,7 @@ block content
         br
 
     div.w3-card-2.w3-margin-left.w3-margin-top.w3-margin-bottom(style="margin-right:35%")
-        header.w3-light-gray.w3-padding
+        header.w3-light-grey.w3-padding(id="epochPanel")
             h3 Nastavení epochy
         div.w3-container.w3-padding
             form(action="/createNewEpoch" method="POST")

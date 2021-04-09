@@ -1,15 +1,20 @@
 {
+    function activateApp() {
+        document.getElementById('initiatingRKVAC').hidden = true;
+        document.getElementById("keyPanel").className = document.getElementById("keyPanel").className.replace("w3-light-grey", "w3-light-blue");
+        document.getElementById("attributePanel").className = document.getElementById("attributePanel").className.replace("w3-light-grey", "w3-light-blue");
+        document.getElementById("newAttributePanel").className = document.getElementById("newAttributePanel").className.replace("w3-light-grey", "w3-cyan");
+        document.getElementById("epochPanel").className = document.getElementById("epochPanel").className.replace("w3-light-grey", "w3-light-blue");
+
+    }
+
     function checkAll() {
         fetch('/check-data', {
             method: 'GET'
         }).then((response) => {
             response.json().then((data) => {
                 if (data.rkvac) {
-                    console.log("Data exists");
-                    return;
-                }
-                if (!data.rkvac) {
-                    console.log("Data doesn`t exist")
+                    activateApp();
                     return;
                 }
                 throw new Error('Request failed');
