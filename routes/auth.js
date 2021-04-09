@@ -9,7 +9,7 @@ var userDB = {
         {
             _id: 1,
             username: 'admin',
-            password: 'jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=',
+            password: 'cW33/8VSFfz5/expPXQikyaDdNVf9dkmXmCgsJ5tn4o=',
             role: 'admin'
         },
         {
