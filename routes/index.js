@@ -336,7 +336,7 @@ const revokeServer = net.createServer((c) => {
 revokeServer.on('error', (err) => {
     throw err;
 });
-revokeServer.listen(5002, () => {
+revokeServer.listen({host: 'localhost', port: 5002, exclusive: true}, () => {
     console.log('server bound');
 });
 
