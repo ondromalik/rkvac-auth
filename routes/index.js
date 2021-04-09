@@ -463,7 +463,12 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
     var command = "printf '4\\n" + req.body.attributeCount + "\\n";
     for (let i = 0; i < req.body.attributeCount; i++) {
         let attribName = 'own' + i;
-        command += req.body[attribName];
+        if (req.body[attribName] === "") {
+            command += " ";
+        }
+        else {
+            command += req.body[attribName];
+        }
         command += "\\n";
     }
     command += "' | ";

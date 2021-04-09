@@ -108,24 +108,22 @@ block content
                         form(action="/deleteAttribute" method="POST")
                             input(type="hidden" name="filename" value="DBStudent.att")
                             button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteStudentButton' disabled=true) Vymazat
+
         div.w3-card.w3-margin
             div.w3-container.w3-padding.w3-gray
                 h4 Nové pověření
             div.w3-container.w3-cell-row.w3-margin-left.w3-margin-top
                 div.w3-cell
-                    button.w3-button.w3-hover-gray.w3-border.w3-round-medium(onclick="changeAttributeType('admin')" id="adminButton") Admin
+                    button.w3-button.w3-hover-gray.w3-border.w3-round-medium(id="adminButton") Admin
                 div.w3-cell
-                    button.w3-button.w3-hover-gray.w3-border.w3-round-medium(onclick="changeAttributeType('teacher')" id="teacherButton") Vyučující
+                    button.w3-button.w3-hover-gray.w3-border.w3-round-medium(id="teacherButton") Vyučující
                 div.w3-cell
-                    button.w3-button.w3-hover-gray.w3-border.w3-round-medium(onclick="changeAttributeType('student')" id="studentButton") Student
+                    button.w3-button.w3-hover-gray.w3-border.w3-round-medium(id="studentButton") Student
             div.w3-container.w3-margin-bottom
-                //form(action="/createAttribute" method="POST")
                 input(type="hidden" name="userrole" value="" id="userrole")
                 div.w3-panel
-                    //label Atribut
-                    //input.w3-input.w3-border.w3-round-medium(type="text" id="newAttribute")
                     p
-                        label Počet atribútov
+                        label(id="attributeCountLabel") Počet atribútov
                         select.w3-select.w3-border.w3-round-medium(id="attributeCount" name="attributeCount")
                             option(value="" selected="selected" disabled) Vyberte počet
                             option(value="1") 1
@@ -139,7 +137,7 @@ block content
                             option(value="9") 9
                     p(id="ownAttributes")
                 div.w3-panel
-                    label Zadejte odhalené atribůty:
+                    label(id="disclosedAttributesLabel") Zadejte odhalené atribúty:
                     input.w3-input.w3-border.w3-round-medium(type="text" id="disclosedAttributes" placeholder="napr. 2,3")
                 div.w3-panel
                     button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(disabled=true id="newAttributeButton") Vytvořit
@@ -147,6 +145,7 @@ block content
                     label.w3-text-green(hidden=true id="newAttributeMessageOK") Pověření úspěšne vytvořené
                 div.w3-panel
                     label.w3-text-red(hidden=true id="newAttributeMessageError")
+        br
 
     div.w3-card-2.w3-margin-left.w3-margin-top.w3-margin-bottom(style="margin-right:35%")
         header.w3-light-gray.w3-padding

@@ -2,81 +2,81 @@
     function checkKeys() {
         fetch('/check-data', {
             method: 'GET'
-        }).then(function(response) {
-            if(response.ok) {
+        }).then(function (response) {
+            if (response.ok) {
                 console.log('RKVAC is ready');
                 document.getElementById('initiatingRKVAC').hidden = true;
                 return;
             }
-            if(response.status === 404) {
+            if (response.status === 404) {
                 console.log('RKVAC is not ready');
                 return;
             }
             throw new Error('Request failed.');
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error);
         });
         fetch('/check-ie-key', {
             method: 'GET'
-        }).then(function(response) {
-            if(response.ok) {
+        }).then(function (response) {
+            if (response.ok) {
                 console.log('File exists');
                 document.getElementById('upload-IE-SK').hidden = true;
                 document.getElementById('delete-IE-SK').hidden = false;
                 return;
             }
-            if(response.status === 404) {
+            if (response.status === 404) {
                 document.getElementById('delete-IE-SK').hidden = true;
                 document.getElementById('upload-IE-SK').hidden = false;
                 console.log('File not found');
                 return;
             }
             throw new Error('Request failed.');
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error);
         });
         fetch('/check-ra-key', {
             method: 'GET'
-        }).then(function(response) {
-            if(response.ok) {
+        }).then(function (response) {
+            if (response.ok) {
                 console.log('File exists');
                 document.getElementById('upload-RA-PK').hidden = true;
                 document.getElementById('delete-RA-PK').hidden = false;
                 return;
             }
-            if(response.status === 404) {
+            if (response.status === 404) {
                 document.getElementById('delete-RA-PK').hidden = true;
                 document.getElementById('upload-RA-PK').hidden = false;
                 console.log('File not found');
                 return;
             }
             throw new Error('Request failed.');
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error);
         });
         fetch('/check-ra-params', {
             method: 'GET'
-        }).then(function(response) {
-            if(response.ok) {
+        }).then(function (response) {
+            if (response.ok) {
                 console.log('File exists');
                 document.getElementById('upload-RA-PARAM').hidden = true;
                 document.getElementById('delete-RA-PARAM').hidden = false;
                 return;
             }
-            if(response.status === 404) {
+            if (response.status === 404) {
                 document.getElementById('delete-RA-PARAM').hidden = true;
                 document.getElementById('upload-RA-PARAM').hidden = false;
                 console.log('File not found');
                 return;
             }
             throw new Error('Request failed.');
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error);
         });
         fetch('/check-admin-attribute', {
             method: 'GET'
-        }).then(function(response) {
-            if(response.ok) {
+        }).then(function (response) {
+            if (response.ok) {
                 console.log('File exists');
                 document.getElementById('adminReady').hidden = false;
                 document.getElementById('adminNotReady').hidden = true;
@@ -84,18 +84,18 @@
                 document.getElementById('adminButton').disabled = true;
                 return;
             }
-            if(response.status === 404) {
+            if (response.status === 404) {
                 console.log('File not found');
                 return;
             }
             throw new Error('Request failed.');
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error);
         });
         fetch('/check-teacher-attribute', {
             method: 'GET'
-        }).then(function(response) {
-            if(response.ok) {
+        }).then(function (response) {
+            if (response.ok) {
                 console.log('File exists');
                 document.getElementById('teacherReady').hidden = false;
                 document.getElementById('teacherNotReady').hidden = true;
@@ -103,18 +103,18 @@
                 document.getElementById('teacherButton').disabled = true;
                 return;
             }
-            if(response.status === 404) {
+            if (response.status === 404) {
                 console.log('File not found');
                 return;
             }
             throw new Error('Request failed.');
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error);
         });
         fetch('/check-student-attribute', {
             method: 'GET'
-        }).then(function(response) {
-            if(response.ok) {
+        }).then(function (response) {
+            if (response.ok) {
                 console.log('File exists');
                 document.getElementById('studentReady').hidden = false;
                 document.getElementById('studentNotReady').hidden = true;
@@ -122,12 +122,12 @@
                 document.getElementById('studentButton').disabled = true;
                 return;
             }
-            if(response.status === 404) {
+            if (response.status === 404) {
                 console.log('File not found');
                 return;
             }
             throw new Error('Request failed.');
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.log(error);
         });
     }
@@ -142,6 +142,16 @@
         document.getElementById(buttonType + 'Button').className += ' w3-gray';
         document.getElementById('newAttributeButton').disabled = false;
     }
+
+    document.getElementById('adminButton').addEventListener('click', () => {
+        changeAttributeType('admin');
+    })
+    document.getElementById('teacherButton').addEventListener('click', () => {
+        changeAttributeType('teacher');
+    })
+    document.getElementById('studentButton').addEventListener('click', () => {
+        changeAttributeType('student');
+    })
 
     /* Changing attributes form */
     const attributeCount = document.getElementById('attributeCount');
@@ -170,48 +180,38 @@
 
     document.getElementById('newAttributeButton').addEventListener('click', () => {
         let userrole = document.getElementById("userrole").value;
-        // let attribute = document.getElementById('newAttribute').value;
         let attributeCount = document.getElementById('attributeCount').value;
         let disclosedAttributes = document.getElementById('disclosedAttributes').value;
-        // if (attribute === "") {
-        //     document.getElementById('newAttributeMessageError').innerHTML = "Název atributu nesmí být prázdny";
-        //     document.getElementById('newAttributeMessageError').hidden = false;
-        // }
-        // else {
-            let newAttribute = {
-                userrole: userrole,
-                attributeCount: attributeCount,
-                disclosedAttributes: disclosedAttributes
-            };
-
-            for (let i = 0; i < attributeCount; i++) {
-                let id = 'own' + i;
-                let attribName = 'own' + i;
-                newAttribute[attribName] = document.getElementById(id).value;
-                document.getElementById(id).value = "";
-            }
-
-            fetch('/createAttribute', {
-                method: 'POST',
-                body: JSON.stringify(newAttribute),
-                headers: { 'Content-Type': 'application/json'}
-            }).then((response) => {
-                response.json().then((data) => {
-                    if (data.success) {
-                        document.getElementById('newAttributeMessageOK').hidden = false;
-                        return;
-                    }
-                    if (!data.success) {
-                        document.getElementById('newAttributeMessageError').hidden = false;
-                        return;
-                    }
-                    throw new Error('Request failed.');
-                }).catch((error) => {
-                    console.log(error);
-                });
+        let newAttribute = {
+            userrole: userrole,
+            attributeCount: attributeCount,
+            disclosedAttributes: disclosedAttributes
+        };
+        for (let i = 0; i < attributeCount; i++) {
+            let id = 'own' + i;
+            let attribName = 'own' + i;
+            newAttribute[attribName] = document.getElementById(id).value;
+            document.getElementById(id).value = "";
+        }
+        fetch('/createAttribute', {
+            method: 'POST',
+            body: JSON.stringify(newAttribute),
+            headers: {'Content-Type': 'application/json'}
+        }).then((response) => {
+            response.json().then((data) => {
+                if (data.success) {
+                    document.getElementById('newAttributeMessageOK').hidden = false;
+                    return;
+                }
+                if (!data.success) {
+                    document.getElementById('newAttributeMessageError').hidden = false;
+                    return;
+                }
+                throw new Error('Request failed.');
+            }).catch((error) => {
+                console.log(error);
             });
-            // connect();
-        // }
+        });
     })
 
     document.getElementById('scheduleEpochButton').addEventListener('click', () => {
@@ -226,15 +226,15 @@
             fetch('/scheduleNewEpoch', {
                 method: 'POST',
                 body: JSON.stringify(scheduleInfo),
-                headers: { 'Content-Type': 'application/json'}
+                headers: {'Content-Type': 'application/json'}
             }).then((response) => {
-                if(response.ok) {
+                if (response.ok) {
                     message.innerHTML = "Přechod na novou epochu naplánován";
                     message.hidden = false;
                     message.className = "w3-text-green";
                     return;
                 }
-                if(response.status === 501) {
+                if (response.status === 501) {
                     message.innerHTML = "Časovač nemá správny formát";
                     message.hidden = false;
                     message.className = "w3-text-red";
@@ -244,26 +244,19 @@
             }).catch((error) => {
                 console.log(error);
             });
-        }
-        else if (RAAddress === "" && cronTimer !== "") {
+        } else if (RAAddress === "" && cronTimer !== "") {
             message.innerHTML = "Časovač nezadán";
             message.hidden = false;
             message.className = "w3-text-red";
-        }
-        else if (RAAddress !== "" && cronTimer === "") {
+        } else if (RAAddress !== "" && cronTimer === "") {
             message.innerHTML = "Adresa revokační autority nezadána";
             message.hidden = false;
             message.className = "w3-text-red";
-        }
-        else {
+        } else {
             message.innerHTML = "Adresa revokační autority a časovač nejsou zadány";
             message.hidden = false;
             message.className = "w3-text-red";
         }
-    })
-
-    document.getElementById('connectButton').addEventListener(('click'), () => {
-        connect();
     })
 
     document.getElementById('destroyEpochButton').addEventListener('click', () => {
@@ -271,7 +264,7 @@
         fetch('/destroyEpoch', {
             method: 'POST'
         }).then((response) => {
-            if(response.ok) {
+            if (response.ok) {
                 message.innerHTML = "Pravidelný přechod na novou epochu zrušen";
                 message.hidden = false;
                 message.className += " w3-text-red";
