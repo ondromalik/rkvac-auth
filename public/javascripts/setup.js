@@ -1,4 +1,75 @@
 {
+    function checkAll() {
+        fetch('/check-data', {
+            method: 'GET'
+        }).then((response) => {
+            response.json().then((data) => {
+                if (data.rkvac) {
+                    console.log("Data exists");
+                    return;
+                }
+                if (!data.rkvac) {
+                    console.log("Data doesn`t exist")
+                    return;
+                }
+                throw new Error('Request failed');
+            }).catch((error) => {
+                console.log(error);
+            });
+        });
+        fetch('/check-keys', {
+            method: 'GET'
+        }).then((response) => {
+            response.json().then((data) => {
+                if (data.ieKey) {
+                    console.log("IE exists");
+                } else if (!data.ieKey) {
+                    console.log("IE not exists");
+                } else {
+                    throw new Error('Request failed');
+                }
+                if (data.raKey) {
+                    console.log("RA exists");
+                } else if (!data.raKey) {
+                    console.log("RA not exists");
+                }
+                if (data.raParams) {
+                    console.log("RA Params exists");
+                } else if (!data.raParams) {
+                    console.log("RA Params not exists");
+                }
+            }).catch((error) => {
+                console.log(error);
+            });
+        });
+        fetch('/check-attribute-files', {
+            method: 'GET'
+        }).then((response) => {
+            response.json().then((data) => {
+                if (data.adminReady) {
+                    console.log("Admin ready");
+                } else if (!data.adminReady) {
+                    console.log("Admin not ready");
+                } else {
+                    throw new Error('Request failed');
+                }
+                if (data.teacherReady) {
+                    console.log("Teacher ready");
+                } else if (!data.teacherReady) {
+                    console.log("Teacher not ready");
+                }
+                if (data.studentReady) {
+                    console.log("Student ready");
+                } else if (!data.studentReady) {
+                    console.log("Student not ready");
+                }
+            }).catch((error) => {
+                console.log(error);
+            });
+        });
+    }
+
+
     function checkKeys() {
         fetch('/check-data', {
             method: 'GET'
@@ -132,7 +203,7 @@
         });
     }
 
-    window.onload = checkKeys;
+    window.onload = checkAll;
 
     function changeAttributeType(buttonType) {
         document.getElementById("userrole").value = buttonType;

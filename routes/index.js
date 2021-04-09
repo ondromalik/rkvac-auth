@@ -10,7 +10,7 @@ var path = require('path');
 const {exec} = require("child_process");
 const net = require('net');
 var cron = require('node-cron');
-var task = cron.schedule('* * * * *', () =>  {
+var task = cron.schedule('* * * * *', () => {
     console.log('stopped task');
 }, {
     scheduled: false
@@ -173,41 +173,83 @@ router.get('/initiateRKVAC', require('permission')(['admin']), (req, res) => {
 router.get('/check-data', require('permission')(['admin']), (req, res) => {
     fs.access('./data', fs.F_OK, (err) => {
         if (err) {
-            res.sendStatus(404);
+            res.json({rkvac: false});
             return
         }
-        res.sendStatus(200);
+        res.json({rkvac: true});
     })
 });
 
-router.get('/check-ie-key', require('permission')(['admin']), (req, res) => {
+// router.get('/check-ie-key', require('permission')(['admin']), (req, res) => {
+//     fs.access('./data/Verifier/ie_sk.dat', fs.F_OK, (err) => {
+//         if (err) {
+//             res.sendStatus(404);
+//             return
+//         }
+//         res.sendStatus(200);
+//     })
+// });
+//
+// router.get('/check-ra-key', require('permission')(['admin']), (req, res) => {
+//     fs.access('./data/Verifier/ra_pk.dat', fs.F_OK, (err) => {
+//         if (err) {
+//             res.sendStatus(404);
+//             return
+//         }
+//         res.sendStatus(200);
+//     })
+// });
+//
+// router.get('/check-ra-params', require('permission')(['admin']), (req, res) => {
+//     fs.access('./data/Verifier/ra_public_parameters.dat', fs.F_OK, (err) => {
+//         if (err) {
+//             res.sendStatus(404);
+//             return
+//         }
+//         res.sendStatus(200);
+//     })
+// });
+
+router.get('/check-keys', require('permission')(['admin']), (req, res) => {
+    let response = {
+        ieKey: false,
+        raKey: false,
+        raParams: false
+    }
     fs.access('./data/Verifier/ie_sk.dat', fs.F_OK, (err) => {
-        if (err) {
-            res.sendStatus(404);
-            return
-        }
-        res.sendStatus(200);
-    })
+        response.ieKey = true;
+        fs.access('./data/Verifier/ra_pk.dat', fs.F_OK, (err) => {
+            response.raKey = true;
+            fs.access('./data/Verifier/ra_public_parameters.dat', fs.F_OK, (err) => {
+                response.raParams = true;
+                res.json({ieKey: response.ieKey, raKey: response.raKey, raParams: response.raParams});
+            });
+        });
+    });
 });
 
-router.get('/check-ra-key', require('permission')(['admin']), (req, res) => {
-    fs.access('./data/Verifier/ra_pk.dat', fs.F_OK, (err) => {
-        if (err) {
-            res.sendStatus(404);
-            return
+router.get('/check-attribute-files', require('permission')(['admin']), (req, res) => {
+    let response = {
+        adminReady: false,
+        teacherReady: false,
+        studentReady: false
+    }
+    fs.access('./data/Verifier/DBAdmin.att', fs.F_OK, (err) => {
+        if (!err) {
+            response.adminReady = true;
         }
-        res.sendStatus(200);
-    })
-});
-
-router.get('/check-ra-params', require('permission')(['admin']), (req, res) => {
-    fs.access('./data/Verifier/ra_public_parameters.dat', fs.F_OK, (err) => {
-        if (err) {
-            res.sendStatus(404);
-            return
-        }
-        res.sendStatus(200);
-    })
+        fs.access('./data/Verifier/DBTeacher.att', fs.F_OK, (err) => {
+            if (!err) {
+                response.teacherReady = true;
+            }
+            fs.access('./data/Verifier/DBStudent.att', fs.F_OK, (err) => {
+                if (!err) {
+                    response.studentReady = true;
+                }
+                res.json({adminReady: response.adminReady, teacherReady: response.teacherReady, studentReady: response.studentReady});
+            });
+        });
+    });
 });
 
 router.get('/check-admin-attribute', require('permission')(['admin']), (req, res) => {
@@ -336,7 +378,7 @@ const revokeServer = net.createServer((c) => {
 revokeServer.on('error', (err) => {
     throw err;
 });
-revokeServer.listen(5002, () => {
+revokeServer.listen({host: 'localhost', port: 5002, exclusive: true}, () => {
     console.log('server bound');
 });
 
@@ -465,8 +507,7 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
         let attribName = 'own' + i;
         if (req.body[attribName] === "") {
             command += " ";
-        }
-        else {
+        } else {
             command += req.body[attribName];
         }
         command += "\\n";
