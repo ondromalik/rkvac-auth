@@ -321,21 +321,25 @@ router.get('/check-epoch', require('permission')(['admin']), (req, res) => {
         epochNumber: "",
         currentCron: ""
     }
-    fs.readFile('./data/Verifier/RAAddress.txt', "utf8", (err, data) => {
+    fs.readFile('./data/Verifier/RAAddress.dat', "utf8", (err, data) => {
         if (!err) {
             response.RAAddress = data;
         }
         fs.readFile('./data/Verifier/ve_epoch.dat', "utf8", (err1, data1) => {
-            if (!err) {
+            if (!err1) {
                 response.epochNumber = data1;
             }
-            res.json({RAAddress: response.RAAddress, epochNumber: response.epochNumber, currentCron: response.currentCron});
+            res.json({
+                RAAddress: response.RAAddress,
+                epochNumber: response.epochNumber,
+                currentCron: response.currentCron
+            });
         });
     });
 });
 
 router.get('/deleteRAAddress', require('permission')(['admin']), (req, res) => {
-    fs.unlink('./data/Verifier/RAAddress.txt', (err) => {
+    fs.unlink('./data/Verifier/RAAddress.dat', (err) => {
         if (err) {
             console.error(err)
             return
@@ -491,12 +495,12 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
 });
 
 router.post('/saveRAAddress', require('permission')(['admin']), (req, res) => {
-    fs.writeFile('./data/Verifier/RAAddress.txt', req.body.RAAddress, (err) => {
+    fs.writeFile('./data/Verifier/RAAddress.dat', req.body.RAAddress, 'utf8', (err) => {
         if (err) {
             console.log(err);
             return;
         }
-        console.log("RA address written to ./data/Verifier/RAAddress.txt");
+        console.log("RA address written to ./data/Verifier/RAAddress.dat");
         res.json({success: true});
     });
 });

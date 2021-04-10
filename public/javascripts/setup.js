@@ -102,6 +102,9 @@
                     document.getElementById('RAAddressLabel').innerHTML = data.RAAddress;
                     document.getElementById('RAAddressMessageOK').hidden = false;
                     document.getElementById('RAAddressMessageError').hidden = true;
+                    document.getElementById('saveRAAddress').disabled = true;
+                    document.getElementById('deleteRAAddress').disabled = false;
+                    document.getElementById('newEpochButton').disabled = false;
                 }
                 if (data.RAAddress === "") {
                     document.getElementById('RAAddress').hidden = false;
@@ -109,6 +112,18 @@
                     document.getElementById('RAAddressLabel').innerHTML = "";
                     document.getElementById('RAAddressMessageOK').hidden = true;
                     document.getElementById('RAAddressMessageError').hidden = false;
+                    document.getElementById('saveRAAddress').disabled = false;
+                    document.getElementById('deleteRAAddress').disabled = true;
+                    document.getElementById('newEpochButton').disabled = true;
+                }
+                if (data.epochNumber !== "") {
+                    document.getElementById('currentEpochLabel').hidden = false;
+                    document.getElementById('currentEpochLabel').innerHTML = data.epochNumber;
+                    document.getElementById('currentEpochError').hidden = true;
+                }
+                if (data.epochNumber === "") {
+                    document.getElementById('currentEpochLabel').hidden = true;
+                    document.getElementById('currentEpochError').hidden = false;
                 }
             }).catch((error) => {
                 console.log(error);
