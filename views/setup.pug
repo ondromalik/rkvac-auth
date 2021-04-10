@@ -144,11 +144,14 @@ block content
             div.w3-container.w3-margin-left.w3-margin-top
                 label(id="currentEpochLabel" style="font-weight: bold" hidden=true)
                 label.w3-text-red(id="currentEpochError") Žádná epocha ješte nebyla vygenerována
-            div.w3-panel
-                button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id='newEpochButton') Přejít teď
+            div.w3-panel.w3-cell-row
+                div.w3-cell
+                    button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id='newEpochButton') Přejít teď
+                div.w3-cell
+                    label.w3-text-red(id="newEpochError" hidden=true) Přechod na novou epochu nebyl úspěšný
             hr
             div.w3-container.w3-margin-top
-                h5 Adresa revokační autority:
+                h4 Adresa revokační autority:
                 input.w3-input.w3-border.w3-round-medium.w3-margin-top(type="text" name="RAAddress" placeholder="localhost" id="RAAddress")
             div.w3-container.w3-margin-left.w3-margin-top
                 label(id="RAAddressLabel" style="font-weight: bold" hidden=true)
@@ -163,7 +166,7 @@ block content
                     label.w3-text-red(id="RAAddressMessageError") Adresa revokační autority neuložena
             hr
             div.w3-panel
-                h5 Časovač přechodu na novou epochu (ve formátu crontab):
+                h4 Časovač přechodu na novou epochu (ve formátu crontab):
                     a.w3-button.w3-hover-none(href="https://crontab.guru/" target="_blank")
                         i(class="fas fa-question-circle")
                 input.w3-input.w3-border.w3-round-medium(type="text" id="cronTimer" placeholder="0 0 * * *")

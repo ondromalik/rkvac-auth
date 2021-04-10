@@ -143,7 +143,7 @@ socket.setEncoding('utf-8');
 const connect = (server) => {
     socket.connect(5001, server)
 };
-socket.once('connect', function () {
+socket.on('connect', function () {
     console.log('Connected to server!');
     let files = fs.readdirSync('./data/Verifier').filter(fn => fn.endsWith('for_RA.dat'));
     fs.readFile('./data/Verifier/' + files[0], 'utf-8', (err, data) => {
@@ -348,6 +348,26 @@ router.get('/deleteRAAddress', require('permission')(['admin']), (req, res) => {
     })
 });
 
+router.get('/createNewEpoch', require('permission')(['admin']), (req, res) => {
+    exec('./rkvac-protocol-multos-1.0.0 -v -e', (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            res.json({success: false});
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            res.json({success: false});
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+        let RAAddress = fs.readFileSync('./data/Verifier/RAAddress.dat', 'utf-8');
+        connect(RAAddress);
+        res.json({success: true});
+    });
+});
+
+
 /* POST SETUP FUNCTIONS */
 
 router.post('/deleteKey', require('permission')(['admin']), (req, res) => {
@@ -505,21 +525,6 @@ router.post('/saveRAAddress', require('permission')(['admin']), (req, res) => {
     });
 });
 
-router.post('/createNewEpoch', require('permission')(['admin']), (req, res) => {
-    exec('./rkvac-protocol-multos-1.0.0 -v -e', (error, stdout, stderr) => {
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            return;
-        }
-        console.log(`stdout: ${stdout}`);
-        connect(req.body.RAAddress);
-    });
-    res.redirect('/setup');
-});
 
 router.post('/scheduleNewEpoch', require('permission')(['admin']), (req, res) => {
     var valid = cron.validate(req.body.timer);

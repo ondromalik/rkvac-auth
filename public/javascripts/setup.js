@@ -275,6 +275,26 @@
         });
     })
 
+    document.getElementById('newEpochButton').addEventListener('click', () => {
+        fetch('/createNewEpoch', {
+            method: 'GET'
+        }).then((response) => {
+            response.json().then((data) => {
+                if (data.success) {
+                    checkAll();
+                    return;
+                }
+                if (!data.success) {
+                    document.getElementById('newEpochError').hidden = false;
+                    return;
+                }
+                throw new Error('Request failed.');
+            }).catch((error) => {
+                console.log(error);
+            });
+        });
+    })
+
     document.getElementById('scheduleEpochButton').addEventListener('click', () => {
         let RAAddress = document.getElementById('RAAddress').value;
         let cronTimer = document.getElementById('cronTimer').value;
