@@ -23,44 +23,45 @@ block content
     div.w3-card-2.w3-margin-left.w3-margin-top(style="margin-right:35%")
         header.w3-light-grey.w3-padding(id="keyPanel")
             h3 Klíče entit RKVAC
-        div.w3-container.w3-padding
-            table.w3-table.w3-bordered
-                tr
-                    th Popis
-                    th Soubor
-                    th Akce
-                tr(id='upload-IE-SK')
+        div.w3-container.w3-padding.w3-margin-top.w3-margin-bottom
+            table.w3-table-all
+                thead
+                    tr.w3-light-gray
+                        th Popis
+                        th Soubor
+                        th Akce
+                tr.w3-white(id='upload-IE-SK')
                     form(action="/uploadIEKey" method="POST" enctype="multipart/form-data")
                         td(style="padding-left:16px") Soukromý klíč - vydavatel
                         td
                             input.w3-input(type='file' name='ie_sk.dat')
                         td
                             button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Nahrát') Nahrát
-                tr(id="delete-IE-SK" hidden=true)
+                tr.w3-white(id="delete-IE-SK" hidden=true)
                     td(style="padding-left:16px") Soukromý klíč - vydavatel
                     td ie_sk.dat
                     td
                         button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id="deleteIEButton") Vymazat
-                tr(id='upload-RA-PK')
+                tr.w3-light-gray(id='upload-RA-PK')
                     form(action="/uploadRAKey" method="POST" enctype="multipart/form-data")
                         td(style="padding-left:16px") Veřejný klíč - RA
                         td
                             input.w3-input(type='file' name='ra_pk.dat')
                         td
                             button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Nahrát') Nahrát
-                tr(id="delete-RA-PK" hidden=true)
+                tr.w3-light-gray(id="delete-RA-PK" hidden=true)
                     td(style="padding-left:16px") Veřejný klíč - RA
                     td ra_pk.dat
                     td
                         button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id="deleteRAButton") Vymazat
-                tr(id='upload-RA-PARAM')
+                tr.w3-white(id='upload-RA-PARAM')
                     form(action="/uploadRAParams" method="POST" enctype="multipart/form-data")
                         td(style="padding-left:16px") Veřejné parametry - RA
                         td
                             input.w3-input(type='file' name='ra_public_parameters.dat')
                         td
                             button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Nahrát') Nahrát
-                tr(id="delete-RA-PARAM" hidden=true)
+                tr.w3-white(id="delete-RA-PARAM" hidden=true)
                     td(style="padding-left:16px") Veřejné parametry - RA
                     td ra_public_parameters.dat
                     td
@@ -69,12 +70,13 @@ block content
     div.w3-card-2.w3-margin-left.w3-margin-top(style="margin-right:35%")
         header.w3-light-grey.w3-padding(id="attributePanel")
             h3 Přístupová pověření
-        div.w3-container.w3-padding
-            table.w3-table.w3-bordered
-                tr
-                    th Role
-                    th Stav
-                    th Akce
+        div.w3-container.w3-padding.w3-margin-top
+            table.w3-table-all
+                thead
+                    tr.w3-light-grey
+                        th Role
+                        th Stav
+                        th Akce
                 tr
                     td Admin
                     td
@@ -96,91 +98,91 @@ block content
                         p.w3-text-red(id="studentNotReady") nepřipraveno
                     td
                         button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteStudentButton' disabled=true) Vymazat
-
-        div.w3-card.w3-margin
-            div.w3-container.w3-padding.w3-light-grey(id="newAttributePanel")
-                h4 Nové pověření
-            div.w3-container.w3-cell-row.w3-margin-left.w3-margin-top
-                div.w3-cell
-                    button.w3-button.w3-hover-gray.w3-border.w3-round-medium(id="adminButton") Admin
-                div.w3-cell
-                    button.w3-button.w3-hover-gray.w3-border.w3-round-medium(id="teacherButton") Vyučující
-                div.w3-cell
-                    button.w3-button.w3-hover-gray.w3-border.w3-round-medium(id="studentButton") Student
-            div.w3-container.w3-margin-bottom
-                input(type="hidden" name="userrole" value="" id="userrole")
-                div.w3-panel
-                    p
-                        label(id="attributeCountLabel") Počet atribútov
-                        select.w3-select.w3-border.w3-round-medium(id="attributeCount" name="attributeCount")
-                            option(value="" selected="selected" disabled) Vyberte počet
-                            option(value="1") 1
-                            option(value="2") 2
-                            option(value="3") 3
-                            option(value="4") 4
-                            option(value="5") 5
-                            option(value="6") 6
-                            option(value="7") 7
-                            option(value="8") 8
-                            option(value="9") 9
-                    p(id="ownAttributes")
-                div.w3-panel
-                    label(id="disclosedAttributesLabel") Zadejte odhalené atribúty:
-                    input.w3-input.w3-border.w3-round-medium(type="text" id="disclosedAttributes" placeholder="napr. 2,3")
-                div.w3-panel
-                    button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(disabled=true id="newAttributeButton") Vytvořit
-                div.w3-panel
-                    label.w3-text-green(hidden=true id="newAttributeMessageOK" class="message") Pověření úspěšne vytvořené
-                div.w3-panel
-                    label.w3-text-red(hidden=true id="newAttributeMessageError" class="message")
+        //hr
+        div.w3-container.w3-light-gray.w3-padding.w3-margin-top(id="newAttributePanel")
+            h4 Nové pověření:
+        div.w3-container.w3-cell-row.w3-margin-left.w3-margin-top
+            div.w3-cell
+                button.w3-button.w3-hover-gray.w3-border.w3-round-medium(id="adminButton") Admin
+            div.w3-cell
+                button.w3-button.w3-hover-gray.w3-border.w3-round-medium(id="teacherButton") Vyučující
+            div.w3-cell
+                button.w3-button.w3-hover-gray.w3-border.w3-round-medium(id="studentButton") Student
+        div.w3-container
+            input(type="hidden" name="userrole" value="" id="userrole")
+            div.w3-panel
+                p
+                    label(id="attributeCountLabel") Počet atribútov
+                    select.w3-select.w3-border.w3-round-medium(id="attributeCount" name="attributeCount")
+                        option(value="" selected="selected" disabled) Vyberte počet
+                        option(value="1") 1
+                        option(value="2") 2
+                        option(value="3") 3
+                        option(value="4") 4
+                        option(value="5") 5
+                        option(value="6") 6
+                        option(value="7") 7
+                        option(value="8") 8
+                        option(value="9") 9
+                p(id="ownAttributes")
+            div.w3-panel
+                label(id="disclosedAttributesLabel") Zadejte odhalené atribúty:
+                input.w3-input.w3-border.w3-round-medium(type="text" id="disclosedAttributes" placeholder="napr. 2,3")
+            div.w3-panel
+                button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(disabled=true id="newAttributeButton") Vytvořit
+            div.w3-panel
+                label.w3-text-green(hidden=true id="newAttributeMessageOK" class="message") Pověření úspěšne vytvořené
+            div.w3-panel
+                label.w3-text-red(hidden=true id="newAttributeMessageError" class="message")
         br
 
     div.w3-card-2.w3-margin-left.w3-margin-top.w3-margin-bottom(style="margin-right:35%")
         header.w3-light-grey.w3-padding(id="epochPanel")
             h3 Nastavení epochy
-        div.w3-container.w3-padding
-            div.w3-panel
-                h4 Aktuální epocha:
-            div.w3-container.w3-margin-left.w3-margin-top
-                label(id="currentEpochLabel" style="font-weight: bold" hidden=true)
-                label.w3-text-red(id="currentEpochError") Žádná epocha ješte nebyla vygenerována
-            div.w3-panel.w3-cell-row
-                div.w3-cell
-                    button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id='newEpochButton') Přejít teď
-                div.w3-cell
-                    label.w3-text-red(id="newEpochError" hidden=true) Přechod na novou epochu nebyl úspěšný
-            hr
-            div.w3-container.w3-margin-top
-                h4 Adresa revokační autority:
-                input.w3-input.w3-border.w3-round-medium.w3-margin-top(type="text" name="RAAddress" placeholder="localhost" id="RAAddress")
-            div.w3-container.w3-margin-left.w3-margin-top
-                label(id="RAAddressLabel" style="font-weight: bold" hidden=true)
-            div.w3-panel.w3-cell-row
-                div.w3-cell
-                    button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id='saveRAAddress') Uložit
-                div.w3-cell
-                    button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id='deleteRAAddress') Vymazat
-                div.w3-cell.w3-right-align
-                    label.w3-text-green(hidden=true id="RAAddressMessageOK") Adresa revokační autority uložena
-                div.w3-cell.w3-right-align
-                    label.w3-text-red(id="RAAddressMessageError") Adresa revokační autority neuložena
-            hr
-            div.w3-panel
-                h4 Časovač přechodu na novou epochu (ve formátu crontab):
-                    a.w3-button.w3-hover-none(href="https://crontab.guru/" target="_blank")
-                        i(class="fas fa-question-circle")
-                input.w3-input.w3-border.w3-round-medium(type="text" id="cronTimer" placeholder="0 0 * * *")
-            div.w3-container.w3-margin-left.w3-margin-top
-                p(id="epochLabel" hidden=true) Naplánován na:
-                label(id="epochScheduleLabel" style="font-weight: bold" hidden=true)
-            div.w3-panel.w3-cell-row
-                div.w3-cell
-                    button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id="scheduleEpochButton") Naplánovat přechod
-                div.w3-cell
-                    button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id="destroyEpochButton") Ukončit přechod
-            div.w3-panel
-                label.w3-text-red(id="scheduleEpochError" hidden=true) Naplánování přechodu nebylo úspěšné
+        //div.w3-container.w3-padding
+        div.w3-container.w3-light-gray.w3-padding
+            h5 Aktuální epocha:
+        div.w3-container.w3-margin-left.w3-margin-top.w3-padding
+            label(id="currentEpochLabel" style="font-weight: bold" hidden=true)
+            label.w3-text-red(id="currentEpochError") Žádná epocha ješte nebyla vygenerována
+        div.w3-container.w3-cell-row.w3-padding.w3-margin-bottom
+            div.w3-cell
+                button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id='newEpochButton') Přejít teď
+            div.w3-cell
+                label.w3-text-red(id="newEpochError" hidden=true) Přechod na novou epochu nebyl úspěšný
+        //hr
+        div.w3-container.w3-margin-top.w3-light-gray.w3-padding
+            h5 Adresa revokační autority:
+        div.w3-container.w3-margin-left.w3-margin-top.w3-padding
+            input.w3-input.w3-border.w3-round-medium(type="text" name="RAAddress" placeholder="localhost" id="RAAddress")
+            label(id="RAAddressLabel" style="font-weight: bold" hidden=true)
+        div.w3-container.w3-cell-row.w3-padding.w3-margin-bottom
+            div.w3-cell
+                button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id='saveRAAddress') Uložit
+            div.w3-cell
+                button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id='deleteRAAddress') Vymazat
+            div.w3-cell.w3-right-align
+                label.w3-text-green(hidden=true id="RAAddressMessageOK") Adresa revokační autority uložena
+            div.w3-cell.w3-right-align
+                label.w3-text-red(id="RAAddressMessageError") Adresa revokační autority neuložena
+        //hr
+        div.w3-container.w3-margin-top.w3-light-gray.w3-padding
+            h5 Časovač přechodu na novou epochu (ve formátu crontab):
+                a.w3-button.w3-hover-none(href="https://crontab.guru/" target="_blank")
+                    i(class="fas fa-question-circle")
+        div.w3-container.w3-margin-left.w3-margin-top.w3-padding
+            input.w3-input.w3-border.w3-round-medium(type="text" id="cronTimer" placeholder="0 0 * * *")
+            p(id="epochLabel" hidden=true) Naplánován na:
+            label(id="epochScheduleLabel" style="font-weight: bold" hidden=true)
+        div.w3-panel.w3-cell-row.w3-padding.w3-margin-bottom
+            div.w3-cell
+                button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id="scheduleEpochButton") Naplánovat přechod
+            div.w3-cell
+                button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id="destroyEpochButton") Ukončit přechod
+            div.w3-cell
                 label.w3-text-red(id="scheduleMessageError") Pravidelný přechod není naplánován
+        div.w3-panel.w3-margin-bottom
+            label.w3-text-red(id="scheduleEpochError" hidden=true) Naplánování přechodu nebylo úspěšné
 
 
     script(src="setup.js")

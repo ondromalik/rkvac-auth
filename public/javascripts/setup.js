@@ -133,6 +133,7 @@
                     document.getElementById('scheduleMessageError').hidden = true;
                     document.getElementById('scheduleEpochButton').disabled = true;
                     document.getElementById('destroyEpochButton').disabled = false;
+                    document.getElementById('scheduleEpochError').hidden = true;
                 }
                 if (data.currentCron === "") {
                     document.getElementById('cronTimer').hidden = false;
@@ -362,7 +363,6 @@
         document.getElementById('initiatingRKVAC').hidden = true;
         document.getElementById("keyPanel").className = document.getElementById("keyPanel").className.replace("w3-light-grey", "w3-light-blue");
         document.getElementById("attributePanel").className = document.getElementById("attributePanel").className.replace("w3-light-grey", "w3-light-blue");
-        document.getElementById("newAttributePanel").className = document.getElementById("newAttributePanel").className.replace("w3-light-grey", "w3-cyan");
         document.getElementById("epochPanel").className = document.getElementById("epochPanel").className.replace("w3-light-grey", "w3-light-blue");
     }
 
