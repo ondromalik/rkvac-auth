@@ -10,11 +10,6 @@ var path = require('path');
 const {exec} = require("child_process");
 const net = require('net');
 var cron = require('node-cron');
-var task = cron.schedule('* * * * *', () =>  {
-    console.log('stopped task');
-}, {
-    scheduled: false
-});
 
 router.use(session({
     secret: 'some-secret',
@@ -135,109 +130,27 @@ router.get('/departments', require('permission')(['admin', 'user', 'guest']), de
 
 /// SETUP FUNCTIONS ///
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './data/Verifier/');
-    },
-
-    // By default, multer removes file extensions so let's add them back
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname);
+var task = cron;
+fs.readFile('./data/Verifier/epochCron.dat', 'utf-8', (err, data) => {
+    if (!err) {
+        task = cron.schedule(data, () => {
+            exec('./rkvac-protocol-multos-1.0.0 -v -e', (error, stdout, stderr) => {
+                if (error) {
+                    console.log(`error: ${error.message}`);
+                    return;
+                }
+                if (stderr) {
+                    console.log(`stderr: ${stderr}`);
+                    return;
+                }
+                console.log(`stdout: ${stdout}`);
+                let RAAddress = fs.readFileSync('./data/Verifier/RAAddress.dat', 'utf-8');
+                connect(RAAddress);
+            });
+        }, {
+            scheduled: true
+        })
     }
-});
-
-const keyFilter = function (req, file, cb) {
-    if (!file.originalname.match(/\.(dat)$/)) {
-        req.fileValidationError = 'Only .dat files are allowed!';
-        return cb(new Error('Only .dat files are allowed!'), false);
-    }
-    cb(null, true);
-};
-
-router.get('/initiateRKVAC', require('permission')(['admin']), (req, res) => {
-    let command = "printf '^C' | ./rkvac-protocol-multos-1.0.0 -v";
-    exec(command, {timeout: 3000}, (error, stdout, stderr) => {
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return;
-        }
-        if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            return;
-        }
-        console.log(`stdout: ${stdout}`);
-    });
-    res.redirect('/setup');
-});
-
-router.get('/check-data', require('permission')(['admin']), (req, res) => {
-    fs.access('./data', fs.F_OK, (err) => {
-        if (err) {
-            res.sendStatus(404);
-            return
-        }
-        res.sendStatus(200);
-    })
-});
-
-router.get('/check-ie-key', require('permission')(['admin']), (req, res) => {
-    fs.access('./data/Verifier/ie_sk.dat', fs.F_OK, (err) => {
-        if (err) {
-            res.sendStatus(404);
-            return
-        }
-        res.sendStatus(200);
-    })
-});
-
-router.get('/check-ra-key', require('permission')(['admin']), (req, res) => {
-    fs.access('./data/Verifier/ra_pk.dat', fs.F_OK, (err) => {
-        if (err) {
-            res.sendStatus(404);
-            return
-        }
-        res.sendStatus(200);
-    })
-});
-
-router.get('/check-ra-params', require('permission')(['admin']), (req, res) => {
-    fs.access('./data/Verifier/ra_public_parameters.dat', fs.F_OK, (err) => {
-        if (err) {
-            res.sendStatus(404);
-            return
-        }
-        res.sendStatus(200);
-    })
-});
-
-router.get('/check-admin-attribute', require('permission')(['admin']), (req, res) => {
-    fs.access('./data/Verifier/DBAdmin.att', fs.F_OK, (err => {
-        if (err) {
-            res.sendStatus(404);
-            return
-        }
-        res.sendStatus(200);
-    }))
-});
-
-router.get('/check-teacher-attribute', require('permission')(['admin']), (req, res) => {
-    fs.access('./data/Verifier/DBTeacher.att', fs.F_OK, (err => {
-        if (err) {
-            res.sendStatus(404);
-            return
-        }
-        res.sendStatus(200);
-    }))
-});
-
-router.get('/check-student-attribute', require('permission')(['admin']), (req, res) => {
-    fs.access('./data/Verifier/DBStudent.att', fs.F_OK, (err => {
-        if (err) {
-            res.sendStatus(404);
-            return
-        }
-        res.sendStatus(200);
-    }))
 });
 
 /* TCP Socket for changing epoch */
@@ -248,7 +161,7 @@ socket.setEncoding('utf-8');
 const connect = (server) => {
     socket.connect(5001, server)
 };
-socket.once('connect', function () {
+socket.on('connect', function () {
     console.log('Connected to server!');
     let files = fs.readdirSync('./data/Verifier').filter(fn => fn.endsWith('for_RA.dat'));
     fs.readFile('./data/Verifier/' + files[0], 'utf-8', (err, data) => {
@@ -266,6 +179,7 @@ socket.on('error', function (error) {
 });
 socket.on('data', function (data) {
     console.log("Writing data");
+
     fs.appendFile('./data/Verifier/ra_BL_epoch_' + currentEpoch + '_C_for_verifier.dat', data, (err => {
         if (err) {
             console.log(err);
@@ -340,8 +254,10 @@ revokeServer.listen({host: 'localhost', port: 5002, exclusive: true}, () => {
     console.log('server bound');
 });
 
-router.post('/createNewEpoch', require('permission')(['admin']), (req, res) => {
-    exec('./rkvac-protocol-multos-1.0.0 -v -e', (error, stdout, stderr) => {
+
+router.get('/initiateRKVAC', require('permission')(['admin']), (req, res) => {
+    let command = "printf '^C' | ./rkvac-protocol-multos-1.0.0 -v";
+    exec(command, {timeout: 3000}, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
             return;
@@ -351,60 +267,161 @@ router.post('/createNewEpoch', require('permission')(['admin']), (req, res) => {
             return;
         }
         console.log(`stdout: ${stdout}`);
-        connect(req.body.RAAddress);
     });
     res.redirect('/setup');
 });
 
-router.post('/scheduleNewEpoch', require('permission')(['admin']), (req, res) => {
-    var valid = cron.validate(req.body.timer);
-    if (!valid) {
-        res.sendStatus(501);
-        return;
+router.get('/check-data', require('permission')(['admin']), (req, res) => {
+    fs.access('./data', fs.F_OK, (err) => {
+        if (err) {
+            res.json({rkvac: false});
+            return
+        }
+        res.json({rkvac: true});
+    })
+});
+
+router.get('/check-keys', require('permission')(['admin']), (req, res) => {
+    let response = {
+        ieKey: false,
+        raKey: false,
+        raParams: false
     }
-    task = cron.schedule(req.body.timer, () => {
-        exec('./rkvac-protocol-multos-1.0.0 -v -e', (error, stdout, stderr) => {
-            if (error) {
-                console.log(`error: ${error.message}`);
-                return;
+    fs.access('./data/Verifier/ie_sk.dat', fs.F_OK, (err) => {
+        if (!err) {
+            response.ieKey = true;
+        }
+        fs.access('./data/Verifier/ra_pk.dat', fs.F_OK, (err) => {
+            if (!err) {
+                response.raKey = true;
             }
-            if (stderr) {
-                console.log(`stderr: ${stderr}`);
-                return;
-            }
-            console.log(`stdout: ${stdout}`);
-            connect(req.body.address);
+            fs.access('./data/Verifier/ra_public_parameters.dat', fs.F_OK, (err) => {
+                if (!err) {
+                    response.raParams = true;
+                }
+                res.json({ieKey: response.ieKey, raKey: response.raKey, raParams: response.raParams});
+            });
         });
     });
-    res.sendStatus(200);
 });
 
-router.post('/destroyEpoch', require('permission')(['admin']), (req, res) => {
-    task.stop();
-    res.sendStatus(200);
+router.get('/check-attribute-files', require('permission')(['admin']), (req, res) => {
+    let response = {
+        adminReady: false,
+        teacherReady: false,
+        studentReady: false
+    }
+    fs.access('./data/Verifier/DBAdmin.att', fs.F_OK, (err) => {
+        if (!err) {
+            response.adminReady = true;
+        }
+        fs.access('./data/Verifier/DBTeacher.att', fs.F_OK, (err) => {
+            if (!err) {
+                response.teacherReady = true;
+            }
+            fs.access('./data/Verifier/DBStudent.att', fs.F_OK, (err) => {
+                if (!err) {
+                    response.studentReady = true;
+                }
+                res.json({
+                    adminReady: response.adminReady,
+                    teacherReady: response.teacherReady,
+                    studentReady: response.studentReady
+                });
+            });
+        });
+    });
 });
 
-router.post('/deleteKey', require('permission')(['admin']), (req, res) => {
-    let path = './data/' + req.body.filename;
-    fs.unlink(path, (err) => {
+router.get('/check-epoch', require('permission')(['admin']), (req, res) => {
+    let response = {
+        RAAddress: "",
+        epochNumber: "",
+        currentCron: ""
+    }
+    fs.readFile('./data/Verifier/RAAddress.dat', "utf8", (err, data) => {
+        if (!err) {
+            response.RAAddress = data;
+        }
+        fs.readFile('./data/Verifier/ve_epoch.dat', "utf8", (err1, data1) => {
+            if (!err1) {
+                response.epochNumber = data1;
+            }
+            fs.readFile('./data/Verifier/epochCron.dat', 'utf-8', (err2, data2) => {
+                if (!err2) {
+                    response.currentCron = data2;
+                }
+                res.json({
+                    RAAddress: response.RAAddress,
+                    epochNumber: response.epochNumber,
+                    currentCron: response.currentCron
+                });
+            })
+        });
+    });
+});
+
+router.get('/deleteRAAddress', require('permission')(['admin']), (req, res) => {
+    fs.unlink('./data/Verifier/RAAddress.dat', (err) => {
         if (err) {
             console.error(err)
             return
         }
-        res.redirect('/setup');
+        res.json({success: true});
     })
 });
 
-router.post('/deleteAttribute', require('permission')(['admin']), (req, res) => {
+router.get('/createNewEpoch', require('permission')(['admin']), (req, res) => {
+    exec('./rkvac-protocol-multos-1.0.0 -v -e', (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            res.json({success: false});
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            res.json({success: false});
+            return;
+        }
+        console.log(`stdout: ${stdout}`);
+        let RAAddress = fs.readFileSync('./data/Verifier/RAAddress.dat', 'utf-8');
+        connect(RAAddress);
+        res.json({success: true});
+    });
+});
+
+
+/* POST SETUP FUNCTIONS */
+
+router.post('/deleteKey', require('permission')(['admin']), (req, res) => {
     let path = './data/Verifier/' + req.body.filename;
     fs.unlink(path, (err) => {
         if (err) {
             console.error(err)
             return
         }
-        res.redirect('/setup');
+        res.json({success: true});
     })
 });
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './data/Verifier/');
+    },
+
+    // By default, multer removes file extensions so let's add them back
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname);
+    }
+});
+
+const keyFilter = function (req, file, cb) {
+    if (!file.originalname.match(/\.(dat)$/)) {
+        req.fileValidationError = 'Only .dat files are allowed!';
+        return cb(new Error('Only .dat files are allowed!'), false);
+    }
+    cb(null, true);
+};
 
 router.post('/uploadIEKey', require('permission')(['admin']), (req, res) => {
     let upload = multer({storage: storage, fileFilter: keyFilter}).single('ie_sk.dat');
@@ -413,7 +430,7 @@ router.post('/uploadIEKey', require('permission')(['admin']), (req, res) => {
         if (req.fileValidationError) {
             return res.send(req.fileValidationError);
         } else if (!req.file) {
-            return res.send('Please select an image to upload');
+            return res.send('Please select .dat file to upload');
         } else if (err instanceof multer.MulterError) {
             return res.send(err);
         } else if (err) {
@@ -457,6 +474,17 @@ router.post('/uploadRAParams', require('permission')(['admin']), (req, res) => {
     });
 });
 
+router.post('/deleteAttribute', require('permission')(['admin']), (req, res) => {
+    let path = './data/Verifier/' + req.body.filename;
+    fs.unlink(path, (err) => {
+        if (err) {
+            console.error(err)
+            return
+        }
+        res.json({success: true});
+    });
+});
+
 router.post('/createAttribute', require('permission')(['admin']), (req, res) => {
     let attribFile = "";
     let positionFile = "";
@@ -465,8 +493,7 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
         let attribName = 'own' + i;
         if (req.body[attribName] === "") {
             command += " ";
-        }
-        else {
+        } else {
             command += req.body[attribName];
         }
         command += "\\n";
@@ -510,5 +537,58 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
     res.json({success: true});
 });
 
+router.post('/saveRAAddress', require('permission')(['admin']), (req, res) => {
+    fs.writeFile('./data/Verifier/RAAddress.dat', req.body.RAAddress, 'utf8', (err) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.log("RA address written to ./data/Verifier/RAAddress.dat");
+        res.json({success: true});
+    });
+});
+
+router.post('/scheduleNewEpoch', require('permission')(['admin']), (req, res) => {
+    var valid = cron.validate(req.body.timer);
+    if (!valid) {
+        res.json({success: false});
+        return;
+    }
+    task = cron.schedule(req.body.timer, () => {
+        exec('./rkvac-protocol-multos-1.0.0 -v -e', (error, stdout, stderr) => {
+            if (error) {
+                console.log(`error: ${error.message}`);
+                return;
+            }
+            if (stderr) {
+                console.log(`stderr: ${stderr}`);
+                return;
+            }
+            console.log(`stdout: ${stdout}`);
+            let RAAddress = fs.readFileSync('./data/Verifier/RAAddress.dat', 'utf-8');
+            connect(RAAddress);
+        });
+    });
+    res.json({success: true});
+    fs.writeFile('./data/Verifier/epochCron.dat', req.body.timer, 'utf-8', (err) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.log("Cron saved to ./data/Verifier/epochCron.dat");
+    });
+});
+
+router.post('/destroyEpoch', require('permission')(['admin']), (req, res) => {
+    task.stop();
+    res.json({success: true});
+    fs.unlink('./data/Verifier/epochCron.dat', (err) => {
+        if (err) {
+            console.error(err)
+            return
+        }
+        console.log("Cron destroyed");
+    });
+});
 
 module.exports = router;
