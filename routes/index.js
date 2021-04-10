@@ -613,7 +613,9 @@ function loadLogs(userFile) {
             }).on('line', function (line) {
                 if (line !== '') {
                     let words = line.split(' ').map(String);
-                    words.splice(2, 1);
+                    if (words[2] === '') {
+                        words.splice(2, 1);
+                    }
                     words[0] += ' ' + words[1] + ' ' + words[2] + ' ' + words[4];
                     words.splice(1, 2);
                     words.splice(2, 1);
