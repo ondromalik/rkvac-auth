@@ -10,6 +10,7 @@ var path = require('path');
 const {exec} = require("child_process");
 const net = require('net');
 var cron = require('node-cron');
+const readline = require('readline');
 
 router.use(session({
     secret: 'some-secret',
@@ -50,6 +51,10 @@ router.get('/logout', function (req, res) {
 
 router.get('/setup', require('permission')(['admin']), (req, res) => {
     res.render('setup', {username: req.user.username});
+});
+
+router.get('/log', require('permission')(['admin']), (req, res) => {
+    res.render('log', {username: req.user.username});
 });
 
 router.post('/login',
@@ -589,6 +594,51 @@ router.post('/destroyEpoch', require('permission')(['admin']), (req, res) => {
         }
         console.log("Cron destroyed");
     });
+});
+
+////// LOGGING FUNCTIONS //////
+
+const logData = {
+    headers: ["Den", "Čas", "Číslo epochy", "Pseudonym", "Výsledek"],
+    rows: []
+};
+
+function loadLogs(userFile) {
+    return new Promise((resolve, reject) => {
+        try {
+            const fileStream = fs.createReadStream(userFile).on('error', reject);
+            readline.createInterface({
+                input: fileStream,
+                console: false
+            }).on('line', function (line) {
+                if (line !== '') {
+                    let words = line.split(' ').map(String);
+                    words.splice(2, 1);
+                    words[0] += ' ' + words[1] + ' ' + words[2] + ' ' + words[4];
+                    words.splice(1, 2);
+                    words.splice(2, 1);
+                    words.splice(4, 1);
+                    logData.rows.push(words);
+                }
+            }).on('close', function () {
+                resolve(logData);
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
+
+router.get('/refreshLog', require('permission')(['admin']), function (req, res) {
+    logData.rows = [];
+    loadLogs('./data/Verifier/ve_requests.log').then((data) => {
+        res.json({
+            headers: data.headers,
+            rows: data.rows
+        })
+    }).catch(err => {
+        console.log('Error: ' + err);
+    })
 });
 
 module.exports = router;

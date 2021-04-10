@@ -1,0 +1,19 @@
+extends layout
+
+block content
+    div.w3-container.w3-gray
+        div.w3-cell-row
+            div.w3-cell(style="width:80%")
+                h1 Přístupové logy
+            div.w3-cell.w3-cell-middle.w3-center
+                h5 Přihlášen: #[i #{username}]
+            div.w3-cell.w3-cell-middle
+                a.w3-button.w3-hover-none(href="/logout")
+                    i(class="fas fa-sign-out-alt fa-lg")
+
+    div.w3-panel
+        a.w3-button.w3-circle.w3-hover-white(id="btnRefreshLog")
+            i(class="fas fa-sync-alt")
+        div(class="logTable" data-url="/refreshLog")
+
+    script(src="log.js")
