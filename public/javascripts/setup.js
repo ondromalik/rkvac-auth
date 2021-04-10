@@ -1,12 +1,5 @@
 {
-    function activateApp() {
-        document.getElementById('initiatingRKVAC').hidden = true;
-        document.getElementById("keyPanel").className = document.getElementById("keyPanel").className.replace("w3-light-grey", "w3-light-blue");
-        document.getElementById("attributePanel").className = document.getElementById("attributePanel").className.replace("w3-light-grey", "w3-light-blue");
-        document.getElementById("newAttributePanel").className = document.getElementById("newAttributePanel").className.replace("w3-light-grey", "w3-cyan");
-        document.getElementById("epochPanel").className = document.getElementById("epochPanel").className.replace("w3-light-grey", "w3-light-blue");
-
-    }
+    /* Check functions */
 
     function checkAll() {
         fetch('/check-data', {
@@ -27,21 +20,27 @@
         }).then((response) => {
             response.json().then((data) => {
                 if (data.ieKey) {
-                    console.log("IE exists");
+                    document.getElementById('upload-IE-SK').hidden = true;
+                    document.getElementById('delete-IE-SK').hidden = false;
                 } else if (!data.ieKey) {
-                    console.log("IE not exists");
+                    document.getElementById('upload-IE-SK').hidden = false;
+                    document.getElementById('delete-IE-SK').hidden = true;
                 } else {
                     throw new Error('Request failed');
                 }
                 if (data.raKey) {
-                    console.log("RA exists");
+                    document.getElementById('upload-RA-PK').hidden = true;
+                    document.getElementById('delete-RA-PK').hidden = false;
                 } else if (!data.raKey) {
-                    console.log("RA not exists");
+                    document.getElementById('upload-RA-PK').hidden = false;
+                    document.getElementById('delete-RA-PK').hidden = true;
                 }
                 if (data.raParams) {
-                    console.log("RA Params exists");
+                    document.getElementById('upload-RA-PARAM').hidden = true;
+                    document.getElementById('delete-RA-PARAM').hidden = false;
                 } else if (!data.raParams) {
-                    console.log("RA Params not exists");
+                    document.getElementById('upload-RA-PARAM').hidden = false;
+                    document.getElementById('delete-RA-PARAM').hidden = true;
                 }
             }).catch((error) => {
                 console.log(error);
@@ -52,21 +51,42 @@
         }).then((response) => {
             response.json().then((data) => {
                 if (data.adminReady) {
-                    console.log("Admin ready");
+                    document.getElementById('adminReady').hidden = false;
+                    document.getElementById('adminNotReady').hidden = true;
+                    document.getElementById('deleteAdminButton').disabled = false;
+                    document.getElementById('adminButton').disabled = true;
+                    document.getElementById('adminButton').className = document.getElementById('adminButton').className.replace("w3-gray", "");
                 } else if (!data.adminReady) {
-                    console.log("Admin not ready");
+                    document.getElementById('adminReady').hidden = true;
+                    document.getElementById('adminNotReady').hidden = false;
+                    document.getElementById('deleteAdminButton').disabled = true;
+                    document.getElementById('adminButton').disabled = false;
                 } else {
                     throw new Error('Request failed');
                 }
                 if (data.teacherReady) {
-                    console.log("Teacher ready");
+                    document.getElementById('teacherReady').hidden = false;
+                    document.getElementById('teacherNotReady').hidden = true;
+                    document.getElementById('deleteTeacherButton').disabled = false;
+                    document.getElementById('teacherButton').disabled = true;
+                    document.getElementById('teacherButton').className = document.getElementById('teacherButton').className.replace("w3-gray", "");
                 } else if (!data.teacherReady) {
-                    console.log("Teacher not ready");
+                    document.getElementById('teacherReady').hidden = true;
+                    document.getElementById('teacherNotReady').hidden = false;
+                    document.getElementById('deleteTeacherButton').disabled = true;
+                    document.getElementById('teacherButton').disabled = false;
                 }
                 if (data.studentReady) {
-                    console.log("Student ready");
+                    document.getElementById('studentReady').hidden = false;
+                    document.getElementById('studentNotReady').hidden = true;
+                    document.getElementById('deleteStudentButton').disabled = false;
+                    document.getElementById('studentButton').disabled = true;
+                    document.getElementById('studentButton').className = document.getElementById('studentButton').className.replace("w3-gray", "");
                 } else if (!data.studentReady) {
-                    console.log("Student not ready");
+                    document.getElementById('studentReady').hidden = true;
+                    document.getElementById('studentNotReady').hidden = false;
+                    document.getElementById('deleteStudentButton').disabled = true;
+                    document.getElementById('studentButton').disabled = false;
                 }
             }).catch((error) => {
                 console.log(error);
@@ -74,150 +94,21 @@
         });
     }
 
-
-    function checkKeys() {
-        fetch('/check-data', {
-            method: 'GET'
-        }).then(function (response) {
-            if (response.ok) {
-                console.log('RKVAC is ready');
-                document.getElementById('initiatingRKVAC').hidden = true;
-                return;
-            }
-            if (response.status === 404) {
-                console.log('RKVAC is not ready');
-                return;
-            }
-            throw new Error('Request failed.');
-        }).catch(function (error) {
-            console.log(error);
-        });
-        fetch('/check-ie-key', {
-            method: 'GET'
-        }).then(function (response) {
-            if (response.ok) {
-                console.log('File exists');
-                document.getElementById('upload-IE-SK').hidden = true;
-                document.getElementById('delete-IE-SK').hidden = false;
-                return;
-            }
-            if (response.status === 404) {
-                document.getElementById('delete-IE-SK').hidden = true;
-                document.getElementById('upload-IE-SK').hidden = false;
-                console.log('File not found');
-                return;
-            }
-            throw new Error('Request failed.');
-        }).catch(function (error) {
-            console.log(error);
-        });
-        fetch('/check-ra-key', {
-            method: 'GET'
-        }).then(function (response) {
-            if (response.ok) {
-                console.log('File exists');
-                document.getElementById('upload-RA-PK').hidden = true;
-                document.getElementById('delete-RA-PK').hidden = false;
-                return;
-            }
-            if (response.status === 404) {
-                document.getElementById('delete-RA-PK').hidden = true;
-                document.getElementById('upload-RA-PK').hidden = false;
-                console.log('File not found');
-                return;
-            }
-            throw new Error('Request failed.');
-        }).catch(function (error) {
-            console.log(error);
-        });
-        fetch('/check-ra-params', {
-            method: 'GET'
-        }).then(function (response) {
-            if (response.ok) {
-                console.log('File exists');
-                document.getElementById('upload-RA-PARAM').hidden = true;
-                document.getElementById('delete-RA-PARAM').hidden = false;
-                return;
-            }
-            if (response.status === 404) {
-                document.getElementById('delete-RA-PARAM').hidden = true;
-                document.getElementById('upload-RA-PARAM').hidden = false;
-                console.log('File not found');
-                return;
-            }
-            throw new Error('Request failed.');
-        }).catch(function (error) {
-            console.log(error);
-        });
-        fetch('/check-admin-attribute', {
-            method: 'GET'
-        }).then(function (response) {
-            if (response.ok) {
-                console.log('File exists');
-                document.getElementById('adminReady').hidden = false;
-                document.getElementById('adminNotReady').hidden = true;
-                document.getElementById('deleteAdminButton').disabled = false;
-                document.getElementById('adminButton').disabled = true;
-                return;
-            }
-            if (response.status === 404) {
-                console.log('File not found');
-                return;
-            }
-            throw new Error('Request failed.');
-        }).catch(function (error) {
-            console.log(error);
-        });
-        fetch('/check-teacher-attribute', {
-            method: 'GET'
-        }).then(function (response) {
-            if (response.ok) {
-                console.log('File exists');
-                document.getElementById('teacherReady').hidden = false;
-                document.getElementById('teacherNotReady').hidden = true;
-                document.getElementById('deleteTeacherButton').disabled = false;
-                document.getElementById('teacherButton').disabled = true;
-                return;
-            }
-            if (response.status === 404) {
-                console.log('File not found');
-                return;
-            }
-            throw new Error('Request failed.');
-        }).catch(function (error) {
-            console.log(error);
-        });
-        fetch('/check-student-attribute', {
-            method: 'GET'
-        }).then(function (response) {
-            if (response.ok) {
-                console.log('File exists');
-                document.getElementById('studentReady').hidden = false;
-                document.getElementById('studentNotReady').hidden = true;
-                document.getElementById('deleteStudentButton').disabled = false;
-                document.getElementById('studentButton').disabled = true;
-                return;
-            }
-            if (response.status === 404) {
-                console.log('File not found');
-                return;
-            }
-            throw new Error('Request failed.');
-        }).catch(function (error) {
-            console.log(error);
-        });
-    }
-
     window.onload = checkAll;
 
-    function changeAttributeType(buttonType) {
-        document.getElementById("userrole").value = buttonType;
-        document.getElementById('adminButton').className = document.getElementById('adminButton').className.replace('w3-gray', "");
-        document.getElementById('teacherButton').className = document.getElementById('teacherButton').className.replace('w3-gray', '');
-        document.getElementById('studentButton').className = document.getElementById('studentButton').className.replace('w3-gray', '');
-        document.getElementById(buttonType + 'Button').className += ' w3-gray';
-        document.getElementById('newAttributeButton').disabled = false;
-    }
+    /* Button`s listeners */
+
+    document.getElementById('deleteAdminButton').addEventListener('click', () => {
+        deleteAttribute("admin");
+    })
+
+    document.getElementById('deleteTeacherButton').addEventListener('click', () => {
+        deleteAttribute("teacher");
+    })
+
+    document.getElementById('deleteStudentButton').addEventListener('click', () => {
+        deleteAttribute("student");
+    })
 
     document.getElementById('adminButton').addEventListener('click', () => {
         changeAttributeType('admin');
@@ -277,6 +168,7 @@
             response.json().then((data) => {
                 if (data.success) {
                     document.getElementById('newAttributeMessageOK').hidden = false;
+                    checkAll();
                     return;
                 }
                 if (!data.success) {
@@ -357,4 +249,63 @@
             console.log(error);
         });
     })
+
+    /* Functions */
+
+    function activateApp() {
+        document.getElementById('initiatingRKVAC').hidden = true;
+        document.getElementById("keyPanel").className = document.getElementById("keyPanel").className.replace("w3-light-grey", "w3-light-blue");
+        document.getElementById("attributePanel").className = document.getElementById("attributePanel").className.replace("w3-light-grey", "w3-light-blue");
+        document.getElementById("newAttributePanel").className = document.getElementById("newAttributePanel").className.replace("w3-light-grey", "w3-cyan");
+        document.getElementById("epochPanel").className = document.getElementById("epochPanel").className.replace("w3-light-grey", "w3-light-blue");
+    }
+
+    function changeAttributeType(buttonType) {
+        document.getElementById("userrole").value = buttonType;
+        document.getElementById('adminButton').className = document.getElementById('adminButton').className.replace('w3-gray', "");
+        document.getElementById('teacherButton').className = document.getElementById('teacherButton').className.replace('w3-gray', '');
+        document.getElementById('studentButton').className = document.getElementById('studentButton').className.replace('w3-gray', '');
+        document.getElementById(buttonType + 'Button').className += ' w3-gray';
+        document.getElementById('newAttributeButton').disabled = false;
+    }
+
+    function deleteAttribute(userrole) {
+        hideMessages();
+        let file = {
+            filename: ""
+        }
+        switch (userrole) {
+            case "admin":
+                file.filename = "DBAdmin.att"
+                break;
+            case "teacher":
+                file.filename = "DBTeacher.att"
+                break;
+            case "student":
+                file.filename = "DBStudent.att"
+                break;
+        }
+        fetch("/deleteAttribute", {
+            method: 'POST',
+            body: JSON.stringify(file),
+            headers: {'Content-Type': 'application/json'}
+        }).then((response) => {
+            response.json().then((data) => {
+                if (data.success) {
+                    checkAll();
+                    return;
+                }
+                throw new Error('Request failed.');
+            }).catch((error) => {
+                console.log(error);
+            });
+        });
+    }
+
+    function hideMessages () {
+        let messages = document.getElementsByClassName("message");
+        for (let i = 0; i < messages.length; i++) {
+            messages[i].hidden = true;
+        }
+    }
 }

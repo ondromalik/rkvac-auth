@@ -444,7 +444,7 @@ router.post('/deleteAttribute', require('permission')(['admin']), (req, res) => 
             console.error(err)
             return
         }
-        res.redirect('/setup');
+        res.json({success: true});
     })
 });
 

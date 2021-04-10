@@ -87,27 +87,21 @@ block content
                         p.w3-text-green(id="adminReady" hidden=true) připraveno
                         p.w3-text-red(id="adminNotReady") nepřipraveno
                     td
-                        form(action="/deleteAttribute" method="POST")
-                            input(type="hidden" name="filename" value="DBAdmin.att")
-                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteAdminButton' disabled=true) Vymazat
+                        button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteAdminButton' disabled=true) Vymazat
                 tr
                     td Vyučující
                     td
                         p.w3-text-green(id="teacherReady" hidden=true) připraveno
                         p.w3-text-red(id="teacherNotReady") nepřipraveno
                     td
-                        form(action="/deleteAttribute" method="POST")
-                            input(type="hidden" name="filename" value="DBTeacher.att")
-                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteTeacherButton' disabled=true) Vymazat
+                        button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteTeacherButton' disabled=true) Vymazat
                 tr
                     td Student
                     td
                         p.w3-text-green(id="studentReady" hidden=true) připraveno
                         p.w3-text-red(id="studentNotReady") nepřipraveno
                     td
-                        form(action="/deleteAttribute" method="POST")
-                            input(type="hidden" name="filename" value="DBStudent.att")
-                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteStudentButton' disabled=true) Vymazat
+                        button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteStudentButton' disabled=true) Vymazat
 
         div.w3-card.w3-margin
             div.w3-container.w3-padding.w3-light-grey(id="newAttributePanel")
@@ -142,9 +136,9 @@ block content
                 div.w3-panel
                     button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(disabled=true id="newAttributeButton") Vytvořit
                 div.w3-panel
-                    label.w3-text-green(hidden=true id="newAttributeMessageOK") Pověření úspěšne vytvořené
+                    label.w3-text-green(hidden=true id="newAttributeMessageOK" class="message") Pověření úspěšne vytvořené
                 div.w3-panel
-                    label.w3-text-red(hidden=true id="newAttributeMessageError")
+                    label.w3-text-red(hidden=true id="newAttributeMessageError" class="message")
         br
 
     div.w3-card-2.w3-margin-left.w3-margin-top.w3-margin-bottom(style="margin-right:35%")
@@ -168,10 +162,6 @@ block content
                 button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id="destroyEpochButton") Ukončit pravidelní přechod
             div.w3-panel
                 label(hidden=true id="scheduleMessage")
-
-        //div.w3-container.w3-padding
-        //    form(action="/createNewEpoch" method="GET")
-        //        button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit') Vytvořit
 
 
     script(src="setup.js")
