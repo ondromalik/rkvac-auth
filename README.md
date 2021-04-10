@@ -6,9 +6,10 @@ Access permission are divided into 3 levels, based on attributes that user holds
 - db-admin - administrator access
 - db-user - user access
 - db-guest - guest access
+- Revoking user
 
 ## To do:
-- Revoking user
+- Logging
 
 ## Usage:
 - build RKVAC C app directly in project folder
