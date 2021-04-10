@@ -161,6 +161,7 @@ socket.on('error', function (error) {
 });
 socket.on('data', function (data) {
     console.log("Writing data");
+
     fs.appendFile('./data/Verifier/ra_BL_epoch_' + currentEpoch + '_C_for_verifier.dat', data, (err => {
         if (err) {
             console.log(err);
@@ -304,40 +305,43 @@ router.get('/check-attribute-files', require('permission')(['admin']), (req, res
                 if (!err) {
                     response.studentReady = true;
                 }
-                res.json({adminReady: response.adminReady, teacherReady: response.teacherReady, studentReady: response.studentReady});
+                res.json({
+                    adminReady: response.adminReady,
+                    teacherReady: response.teacherReady,
+                    studentReady: response.studentReady
+                });
             });
         });
     });
 });
 
-router.get('/check-admin-attribute', require('permission')(['admin']), (req, res) => {
-    fs.access('./data/Verifier/DBAdmin.att', fs.F_OK, (err => {
-        if (err) {
-            res.sendStatus(404);
-            return
+router.get('/check-epoch', require('permission')(['admin']), (req, res) => {
+    let response = {
+        RAAddress: "",
+        epochNumber: "",
+        currentCron: ""
+    }
+    fs.readFile('./data/Verifier/RAAddress.txt', "utf8", (err, data) => {
+        if (!err) {
+            response.RAAddress = data;
         }
-        res.sendStatus(200);
-    }))
+        fs.readFile('./data/Verifier/ve_epoch.dat', "utf8", (err1, data1) => {
+            if (!err) {
+                response.epochNumber = data1;
+            }
+            res.json({RAAddress: response.RAAddress, epochNumber: response.epochNumber, currentCron: response.currentCron});
+        });
+    });
 });
 
-router.get('/check-teacher-attribute', require('permission')(['admin']), (req, res) => {
-    fs.access('./data/Verifier/DBTeacher.att', fs.F_OK, (err => {
+router.get('/deleteRAAddress', require('permission')(['admin']), (req, res) => {
+    fs.unlink('./data/Verifier/RAAddress.txt', (err) => {
         if (err) {
-            res.sendStatus(404);
+            console.error(err)
             return
         }
-        res.sendStatus(200);
-    }))
-});
-
-router.get('/check-student-attribute', require('permission')(['admin']), (req, res) => {
-    fs.access('./data/Verifier/DBStudent.att', fs.F_OK, (err => {
-        if (err) {
-            res.sendStatus(404);
-            return
-        }
-        res.sendStatus(200);
-    }))
+        res.json({success: true});
+    })
 });
 
 /* POST SETUP FUNCTIONS */
@@ -431,7 +435,7 @@ router.post('/deleteAttribute', require('permission')(['admin']), (req, res) => 
             return
         }
         res.json({success: true});
-    })
+    });
 });
 
 router.post('/createAttribute', require('permission')(['admin']), (req, res) => {
@@ -484,6 +488,17 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
         console.log("Disclosed attributes details written to " + positionFile);
     });
     res.json({success: true});
+});
+
+router.post('/saveRAAddress', require('permission')(['admin']), (req, res) => {
+    fs.writeFile('./data/Verifier/RAAddress.txt', req.body.RAAddress, (err) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.log("RA address written to ./data/Verifier/RAAddress.txt");
+        res.json({success: true});
+    });
 });
 
 router.post('/createNewEpoch', require('permission')(['admin']), (req, res) => {

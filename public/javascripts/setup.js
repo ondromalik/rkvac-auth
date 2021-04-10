@@ -92,6 +92,28 @@
                 console.log(error);
             });
         });
+        fetch('/check-epoch', {
+            method: 'GET'
+        }).then((response) => {
+            response.json().then((data) => {
+                if (data.RAAddress !== "") {
+                    document.getElementById('RAAddress').hidden = true;
+                    document.getElementById('RAAddressLabel').hidden = false;
+                    document.getElementById('RAAddressLabel').innerHTML = data.RAAddress;
+                    document.getElementById('RAAddressMessageOK').hidden = false;
+                    document.getElementById('RAAddressMessageError').hidden = true;
+                }
+                if (data.RAAddress === "") {
+                    document.getElementById('RAAddress').hidden = false;
+                    document.getElementById('RAAddressLabel').hidden = true;
+                    document.getElementById('RAAddressLabel').innerHTML = "";
+                    document.getElementById('RAAddressMessageOK').hidden = true;
+                    document.getElementById('RAAddressMessageError').hidden = false;
+                }
+            }).catch((error) => {
+                console.log(error);
+            });
+        });
     }
 
     window.onload = checkAll;
@@ -125,9 +147,11 @@
     document.getElementById('adminButton').addEventListener('click', () => {
         changeAttributeType('admin');
     })
+
     document.getElementById('teacherButton').addEventListener('click', () => {
         changeAttributeType('teacher');
     })
+
     document.getElementById('studentButton').addEventListener('click', () => {
         changeAttributeType('student');
     })
@@ -186,6 +210,47 @@
                 }
                 if (!data.success) {
                     document.getElementById('newAttributeMessageError').hidden = false;
+                    return;
+                }
+                throw new Error('Request failed.');
+            }).catch((error) => {
+                console.log(error);
+            });
+        });
+    })
+
+    document.getElementById('saveRAAddress').addEventListener('click', () => {
+        let RAAddress = document.getElementById('RAAddress').value;
+        if (RAAddress === "") {
+            RAAddress = "localhost"
+        }
+        let RA = {
+            RAAddress: RAAddress
+        }
+        fetch('/saveRAAddress', {
+            method: 'POST',
+            body: JSON.stringify(RA),
+            headers: {'Content-Type': 'application/json'}
+        }).then((response) => {
+            response.json().then((data) => {
+                if (data.success) {
+                    checkAll();
+                    return;
+                }
+                throw new Error('Request failed.');
+            }).catch((error) => {
+                console.log(error);
+            });
+        });
+    })
+
+    document.getElementById('deleteRAAddress').addEventListener('click', () => {
+        fetch('/deleteRAAddress', {
+            method: 'GET'
+        }).then((response) => {
+            response.json().then((data) => {
+                if (data.success) {
+                    checkAll();
                     return;
                 }
                 throw new Error('Request failed.');

@@ -139,12 +139,20 @@ block content
         header.w3-light-grey.w3-padding(id="epochPanel")
             h3 Nastavení epochy
         div.w3-container.w3-padding
-            form(action="/createNewEpoch" method="POST")
-                div.w3-panel
-                    label Adresa revokační autority:
-                    input.w3-input.w3-border.w3-round-medium(type="text" name="RAAddress" placeholder="localhost" required=true id="RAAddress")
-                div.w3-panel
-                    button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit') Nová epocha
+            div.w3-container
+                label Adresa revokační autority:
+                input.w3-input.w3-border.w3-round-medium.w3-margin-top(type="text" name="RAAddress" placeholder="localhost" id="RAAddress")
+            div.w3-container.w3-margin-left.w3-margin-top
+                label(id="RAAddressLabel" style="font-weight: bold" hidden=true)
+            div.w3-panel.w3-cell-row
+                div.w3-cell
+                    button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id='saveRAAddress') Uložit
+                div.w3-cell
+                    button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id='deleteRAAddress') Vymazat
+                div.w3-cell.w3-right-align
+                    label.w3-text-green(hidden=true id="RAAddressMessageOK") Adresa revokační autority uložena
+                div.w3-cell.w3-right-align
+                    label.w3-text-red(id="RAAddressMessageError") Adresa revokační autority neuložena
             div.w3-panel
                 label Časovač přechodu na novou epochu (ve formátu crontab):
                     a.w3-button.w3-hover-none(href="https://crontab.guru/" target="_blank")
