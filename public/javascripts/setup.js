@@ -125,6 +125,24 @@
                     document.getElementById('currentEpochLabel').hidden = true;
                     document.getElementById('currentEpochError').hidden = false;
                 }
+                if (data.currentCron !== "") {
+                    document.getElementById('cronTimer').hidden = true;
+                    document.getElementById('epochLabel').hidden = false;
+                    document.getElementById('epochScheduleLabel').hidden = false;
+                    document.getElementById('epochScheduleLabel').innerHTML = data.currentCron;
+                    document.getElementById('scheduleMessageError').hidden = true;
+                    document.getElementById('scheduleEpochButton').disabled = true;
+                    document.getElementById('destroyEpochButton').disabled = false;
+                }
+                if (data.currentCron === "") {
+                    document.getElementById('cronTimer').hidden = false;
+                    document.getElementById('epochLabel').hidden = true;
+                    document.getElementById('epochScheduleLabel').hidden = true;
+                    document.getElementById('epochScheduleLabel').innerHTML = "";
+                    document.getElementById('scheduleMessageError').hidden = false;
+                    document.getElementById('scheduleEpochButton').disabled = false;
+                    document.getElementById('destroyEpochButton').disabled = true;
+                }
             }).catch((error) => {
                 console.log(error);
             });
@@ -296,48 +314,29 @@
     })
 
     document.getElementById('scheduleEpochButton').addEventListener('click', () => {
-        let RAAddress = document.getElementById('RAAddress').value;
         let cronTimer = document.getElementById('cronTimer').value;
-        let message = document.getElementById('scheduleMessage');
         let scheduleInfo = {
-            address: RAAddress,
             timer: cronTimer
         };
-        if (RAAddress !== "" && cronTimer !== "") {
-            fetch('/scheduleNewEpoch', {
-                method: 'POST',
-                body: JSON.stringify(scheduleInfo),
-                headers: {'Content-Type': 'application/json'}
-            }).then((response) => {
-                if (response.ok) {
-                    message.innerHTML = "Přechod na novou epochu naplánován";
-                    message.hidden = false;
-                    message.className = "w3-text-green";
+        fetch('/scheduleNewEpoch', {
+            method: 'POST',
+            body: JSON.stringify(scheduleInfo),
+            headers: {'Content-Type': 'application/json'}
+        }).then((response) => {
+            response.json().then((data) => {
+                if (data.success) {
+                    checkAll();
                     return;
                 }
-                if (response.status === 501) {
-                    message.innerHTML = "Časovač nemá správny formát";
-                    message.hidden = false;
-                    message.className = "w3-text-red";
+                if (!data.success) {
+                    document.getElementById('scheduleEpochError').hidden = false;
                     return;
                 }
                 throw new Error('Request failed.');
             }).catch((error) => {
                 console.log(error);
             });
-        } else if (RAAddress === "" && cronTimer !== "") {
-            message.innerHTML = "Časovač nezadán";
-            message.hidden = false;
-            message.className = "w3-text-red";
-        } else if (RAAddress !== "" && cronTimer === "") {
-            message.innerHTML = "Adresa revokační autority nezadána";
-            message.hidden = false;
-            message.className = "w3-text-red";
-        } else {
-            message.innerHTML = "Adresa revokační autority a časovač nejsou zadány";
-            message.hidden = false;
-            message.className = "w3-text-red";
-        }
+        });
     })
 
     document.getElementById('destroyEpochButton').addEventListener('click', () => {
@@ -345,21 +344,15 @@
         fetch('/destroyEpoch', {
             method: 'POST'
         }).then((response) => {
-            if (response.ok) {
-                message.innerHTML = "Pravidelný přechod na novou epochu zrušen";
-                message.hidden = false;
-                message.className += " w3-text-red";
-                return;
-            }
-            if (response.status === 501) {
-                message.innerHTML = "Pravidelný přechod nebyl nastaven";
-                message.hidden = false;
-                message.className += " w3-text-red";
-                return;
-            }
-            throw new Error('Request failed.');
-        }).catch((error) => {
-            console.log(error);
+            response.json().then((data) => {
+                if (data.success) {
+                    checkAll();
+                    return;
+                }
+                throw new Error('Request failed.');
+            }).catch((error) => {
+                console.log(error);
+            });
         });
     })
 
@@ -436,7 +429,7 @@
         });
     }
 
-    function hideMessages () {
+    function hideMessages() {
         let messages = document.getElementsByClassName("message");
         for (let i = 0; i < messages.length; i++) {
             messages[i].hidden = true;

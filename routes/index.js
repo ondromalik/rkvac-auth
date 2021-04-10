@@ -10,11 +10,6 @@ var path = require('path');
 const {exec} = require("child_process");
 const net = require('net');
 var cron = require('node-cron');
-var task = cron.schedule('* * * * *', () => {
-    console.log('stopped task');
-}, {
-    scheduled: false
-});
 
 router.use(session({
     secret: 'some-secret',
@@ -134,6 +129,29 @@ router.get('/department/:id', require('permission')(['admin', 'user', 'guest']),
 router.get('/departments', require('permission')(['admin', 'user', 'guest']), department_controller.department_list);
 
 /// SETUP FUNCTIONS ///
+
+var task = cron;
+fs.readFile('./data/Verifier/epochCron.dat', 'utf-8', (err, data) => {
+    if (!err) {
+        task = cron.schedule(data, () => {
+            exec('./rkvac-protocol-multos-1.0.0 -v -e', (error, stdout, stderr) => {
+                if (error) {
+                    console.log(`error: ${error.message}`);
+                    return;
+                }
+                if (stderr) {
+                    console.log(`stderr: ${stderr}`);
+                    return;
+                }
+                console.log(`stdout: ${stdout}`);
+                let RAAddress = fs.readFileSync('./data/Verifier/RAAddress.dat', 'utf-8');
+                connect(RAAddress);
+            });
+        }, {
+            scheduled: true
+        })
+    }
+});
 
 /* TCP Socket for changing epoch */
 
@@ -329,11 +347,16 @@ router.get('/check-epoch', require('permission')(['admin']), (req, res) => {
             if (!err1) {
                 response.epochNumber = data1;
             }
-            res.json({
-                RAAddress: response.RAAddress,
-                epochNumber: response.epochNumber,
-                currentCron: response.currentCron
-            });
+            fs.readFile('./data/Verifier/epochCron.dat', 'utf-8', (err2, data2) => {
+                if (!err2) {
+                    response.currentCron = data2;
+                }
+                res.json({
+                    RAAddress: response.RAAddress,
+                    epochNumber: response.epochNumber,
+                    currentCron: response.currentCron
+                });
+            })
         });
     });
 });
@@ -525,11 +548,10 @@ router.post('/saveRAAddress', require('permission')(['admin']), (req, res) => {
     });
 });
 
-
 router.post('/scheduleNewEpoch', require('permission')(['admin']), (req, res) => {
     var valid = cron.validate(req.body.timer);
     if (!valid) {
-        res.sendStatus(501);
+        res.json({success: false});
         return;
     }
     task = cron.schedule(req.body.timer, () => {
@@ -543,15 +565,30 @@ router.post('/scheduleNewEpoch', require('permission')(['admin']), (req, res) =>
                 return;
             }
             console.log(`stdout: ${stdout}`);
-            connect(req.body.address);
+            let RAAddress = fs.readFileSync('./data/Verifier/RAAddress.dat', 'utf-8');
+            connect(RAAddress);
         });
     });
-    res.sendStatus(200);
+    res.json({success: true});
+    fs.writeFile('./data/Verifier/epochCron.dat', req.body.timer, 'utf-8', (err) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.log("Cron saved to ./data/Verifier/epochCron.dat");
+    });
 });
 
 router.post('/destroyEpoch', require('permission')(['admin']), (req, res) => {
     task.stop();
-    res.sendStatus(200);
+    res.json({success: true});
+    fs.unlink('./data/Verifier/epochCron.dat', (err) => {
+        if (err) {
+            console.error(err)
+            return
+        }
+        console.log("Cron destroyed");
+    });
 });
 
 module.exports = router;
