@@ -37,12 +37,10 @@ block content
                         td
                             button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Nahrát') Nahrát
                 tr(id="delete-IE-SK" hidden=true)
-                    form(action="/deleteKey" method="POST")
-                        td(style="padding-left:16px") Soukromý klíč - vydavatel
-                        td ie_sk.dat
-                        td
-                            input(type="hidden" name="filename" value="Verifier/ie_sk.dat")
-                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit') Vymazat
+                    td(style="padding-left:16px") Soukromý klíč - vydavatel
+                    td ie_sk.dat
+                    td
+                        button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id="deleteIEButton") Vymazat
                 tr(id='upload-RA-PK')
                     form(action="/uploadRAKey" method="POST" enctype="multipart/form-data")
                         td(style="padding-left:16px") Veřejný klíč - RA
@@ -51,12 +49,10 @@ block content
                         td
                             button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Nahrát') Nahrát
                 tr(id="delete-RA-PK" hidden=true)
-                    form(action="/deleteKey" method="POST")
-                        td(style="padding-left:16px") Veřejný klíč - RA
-                        td ra_pk.dat
-                        td
-                            input(type="hidden" name="filename" value="Verifier/ra_pk.dat")
-                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Vymazat') Vymazat
+                    td(style="padding-left:16px") Veřejný klíč - RA
+                    td ra_pk.dat
+                    td
+                        button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id="deleteRAButton") Vymazat
                 tr(id='upload-RA-PARAM')
                     form(action="/uploadRAParams" method="POST" enctype="multipart/form-data")
                         td(style="padding-left:16px") Veřejné parametry - RA
@@ -65,12 +61,10 @@ block content
                         td
                             button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Nahrát') Nahrát
                 tr(id="delete-RA-PARAM" hidden=true)
-                    form(action="/deleteKey" method="POST")
-                        td(style="padding-left:16px") Veřejné parametry - RA
-                        td ra_public_parameters.dat
-                        td
-                            input(type="hidden" name="filename" value="Verifier/ra_public_parameters.dat")
-                            button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' value='Vymazat') Vymazat
+                    td(style="padding-left:16px") Veřejné parametry - RA
+                    td ra_public_parameters.dat
+                    td
+                        button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(id="deleteParamsButton") Vymazat
 
     div.w3-card-2.w3-margin-left.w3-margin-top(style="margin-right:35%")
         header.w3-light-grey.w3-padding(id="attributePanel")

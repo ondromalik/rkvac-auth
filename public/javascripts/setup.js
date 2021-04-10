@@ -98,6 +98,18 @@
 
     /* Button`s listeners */
 
+    document.getElementById('deleteIEButton').addEventListener('click', () => {
+        deleteKey('ie_sk.dat');
+    })
+
+    document.getElementById('deleteRAButton').addEventListener('click', () => {
+        deleteKey('ra_pk.dat');
+    })
+
+    document.getElementById('deleteParamsButton').addEventListener('click', () => {
+        deleteKey('ra_public_parameters.dat');
+    })
+
     document.getElementById('deleteAdminButton').addEventListener('click', () => {
         deleteAttribute("admin");
     })
@@ -121,6 +133,7 @@
     })
 
     /* Changing attributes form */
+
     const attributeCount = document.getElementById('attributeCount');
     const ownAttributes = document.getElementById('ownAttributes');
     attributeCount.addEventListener('change', function () {
@@ -267,6 +280,27 @@
         document.getElementById('studentButton').className = document.getElementById('studentButton').className.replace('w3-gray', '');
         document.getElementById(buttonType + 'Button').className += ' w3-gray';
         document.getElementById('newAttributeButton').disabled = false;
+    }
+
+    function deleteKey(keyName) {
+        let file = {
+            filename: keyName
+        }
+        fetch("/deleteKey", {
+            method: 'POST',
+            body: JSON.stringify(file),
+            headers: {'Content-Type': 'application/json'}
+        }).then((response) => {
+            response.json().then((data) => {
+                if (data.success) {
+                    checkAll();
+                    return;
+                }
+                throw new Error('Request failed.');
+            }).catch((error) => {
+                console.log(error);
+            });
+        });
     }
 
     function deleteAttribute(userrole) {
