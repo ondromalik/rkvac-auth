@@ -507,15 +507,15 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
     switch (req.body.userrole) {
         case "admin":
             attribFile = "DBAdmin.att";
-            positionFile = "./data/Verifier/adminPosition.txt";
+            positionFile = "./data/Verifier/adminPosition.dat";
             break;
         case "teacher":
             attribFile = "DBTeacher.att";
-            positionFile = "./data/Verifier/teacherPosition.txt";
+            positionFile = "./data/Verifier/teacherPosition.dat";
             break;
         case "student":
             attribFile = "DBStudent.att";
-            positionFile = "./data/Verifier/studentPosition.txt";
+            positionFile = "./data/Verifier/studentPosition.dat";
             break;
     }
     command += "./rkvac-protocol-multos-1.0.0 -v -a " + attribFile;
@@ -532,7 +532,7 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
         }
         console.log(`stdout: ${stdout}`);
     });
-    fs.writeFile(positionFile, req.body.disclosedAttributes, (err) => {
+    fs.writeFile(positionFile, req.body.disclosedAttributes, 'utf-8', (err) => {
         if (err) {
             console.log(err);
             return;

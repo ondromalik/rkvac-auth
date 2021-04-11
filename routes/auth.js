@@ -61,18 +61,18 @@ passport.use('verify', new LocalStrategy(
         switch (req.body.userrole) {
             case 'admin':
                 requestedAccess = 'DBAdmin.att';
-                positionFile = "./data/Verifier/adminPosition.txt";
+                positionFile = "./data/Verifier/adminPosition.dat";
                 break;
             case 'teacher':
                 requestedAccess = 'DBTeacher.att';
-                positionFile = "./data/Verifier/teacherPosition.txt";
+                positionFile = "./data/Verifier/teacherPosition.dat";
                 break;
             case 'student':
                 requestedAccess = 'DBStudent.att';
-                positionFile = "./data/Verifier/studentPosition.txt";
+                positionFile = "./data/Verifier/studentPosition.dat";
                 break;
         }
-        fs.readFile(positionFile, (err, data) => {
+        fs.readFile(positionFile, 'utf-8', (err, data) => {
             if (err) {
                 console.log(err);
                 done(null, false, {message: 'Přístup odepřen - chyba v RKVAC'});
