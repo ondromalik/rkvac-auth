@@ -40,7 +40,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Načítavam</td>
+                    <td>Seznam je prázdny</td>
                 </tr>
             </tbody>
         `;
