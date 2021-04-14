@@ -164,7 +164,7 @@ let currentEpoch = "";
 let socket = new net.Socket();
 socket.setEncoding('utf-8');
 const connect = (server) => {
-    socket.connect(5001, server)
+    socket.connect(5004, server)
 };
 socket.on('connect', function () {
     console.log('Connected to server!');
@@ -255,25 +255,18 @@ const revokeServer = net.createServer((c) => {
 revokeServer.on('error', (err) => {
     throw err;
 });
-revokeServer.listen({host: 'localhost', port: 5002, exclusive: true}, () => {
+revokeServer.listen({host: 'localhost', port: 5003, exclusive: true}, () => {
     console.log('server bound');
 });
 
 
 router.get('/initiateRKVAC', require('permission')(['admin']), (req, res) => {
-    let command = "printf '^C' | ./rkvac-protocol-multos-1.0.0 -v";
-    exec(command, {timeout: 3000}, (error, stdout, stderr) => {
-        if (error) {
-            console.log(`error: ${error.message}`);
-            return;
+    fs.mkdir('./data/Verifier', {recursive: true}, err => {
+        if (err) {
+            console.log(err);
         }
-        if (stderr) {
-            console.log(`stderr: ${stderr}`);
-            return;
-        }
-        console.log(`stdout: ${stdout}`);
-    });
-    res.redirect('/setup');
+        res.redirect('/setup');
+    })
 });
 
 router.get('/check-data', require('permission')(['admin']), (req, res) => {
@@ -532,13 +525,24 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
         }
         console.log(`stdout: ${stdout}`);
     });
-    fs.writeFile(positionFile, req.body.disclosedAttributes, 'utf-8', (err) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        console.log("Disclosed attributes details written to " + positionFile);
-    });
+    if (req.body.disclosedAttributes === "") {
+        fs.writeFile(positionFile, "1", 'utf-8', (err) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            console.log("Disclosed attributes details written to " + positionFile);
+        });
+    }
+    else {
+        fs.writeFile(positionFile, req.body.disclosedAttributes, 'utf-8', (err) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            console.log("Disclosed attributes details written to " + positionFile);
+        });
+    }
     res.json({success: true});
 });
 
@@ -593,6 +597,17 @@ router.post('/destroyEpoch', require('permission')(['admin']), (req, res) => {
             return
         }
         console.log("Cron destroyed");
+    });
+});
+
+router.post('/deleteData', require('permission')(['admin']), (req, res) => {
+    fs.rmdir('./data', {recursive: true}, err => {
+        if (err) {
+            console.log(err);
+            res.json({success: false});
+            return;
+        }
+        res.json({success: true});
     });
 });
 

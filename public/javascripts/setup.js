@@ -357,6 +357,26 @@
         });
     })
 
+    document.getElementById('resetRKVAC').addEventListener('click', () => {
+        var really = confirm("Chystáte se vymazat veškerou RKVAC konfiguraci.\nPřejete si pokračovat?");
+        if (really) {
+            fetch("/deleteData", {
+                method: 'POST'
+            }).then((response) => {
+                response.json().then((data) => {
+                    if (data.success) {
+                        location.reload();
+                        return;
+                    }
+                    document.getElementById('resetMessage').hidden = false;
+                    throw new Error('Request failed.');
+                }).catch((error) => {
+                    console.log(error);
+                });
+            });
+        }
+    });
+
     /* Functions */
 
     function activateApp() {
