@@ -26,10 +26,10 @@
 
     async function contactCard(index, hexdata) {
         var _readers = await navigator.webcard.readers();
-        let atr = await _readers[0].connect(true);
+        let atr = await _readers[index].connect(true);
         console.log("APDU request: " + hexdata);
-        let res = await _readers[0].transcieve(hexdata);
-        _readers[0].disconnect();
+        let res = await _readers[index].transcieve(hexdata);
+        _readers[index].disconnect();
         return res;
     }
 

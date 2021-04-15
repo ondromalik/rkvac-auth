@@ -21,12 +21,12 @@
 
     async function contactCard(index, hexdata) {
         var _readers = await navigator.webcard.readers();
-        if (!_readers[0]) {
+        if (!_readers[index]) {
             throw new Error('Card not connected');
         }
-        let atr = await _readers[0].connect(true);
-        let res = await _readers[0].transcieve(hexdata);
-        _readers[0].disconnect();
+        let atr = await _readers[index].connect(true);
+        let res = await _readers[index].transcieve(hexdata);
+        _readers[index].disconnect();
         return res;
     }
 
