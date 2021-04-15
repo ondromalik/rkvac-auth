@@ -11,6 +11,30 @@
         connect(selectedCard.value);
     })
 
+    // document.getElementById('teacherButton').addEventListener('click', () => {
+    //     startLoader();
+    //     let tableRows = document.getElementsByClassName('cardSelector');
+    //     let selectedCard = "";
+    //     for (let i = 0; i < tableRows.length; i++) {
+    //         if (tableRows[i].checked) {
+    //             selectedCard = tableRows[i];
+    //         }
+    //     }
+    //     connect(selectedCard.value);
+    // })
+    //
+    // document.getElementById('studentButton').addEventListener('click', () => {
+    //     startLoader();
+    //     let tableRows = document.getElementsByClassName('cardSelector');
+    //     let selectedCard = "";
+    //     for (let i = 0; i < tableRows.length; i++) {
+    //         if (tableRows[i].checked) {
+    //             selectedCard = tableRows[i];
+    //         }
+    //     }
+    //     connect(selectedCard.value);
+    // })
+
     function startLoader() {
         document.getElementById('login-loader').hidden = false;
     }
