@@ -3,6 +3,7 @@ var LocalStrategy = require('passport-local').Strategy;
 const crypto = require('crypto');
 const {exec} = require("child_process");
 const fs = require('fs');
+const net = require('net');
 
 var userDB = {
     user: [
@@ -82,13 +83,16 @@ passport.use('verify', new LocalStrategy(
             exec(command, (error, stdout, stderr) => {
                 if (error) {
                     console.log(`error: ${error.message}`);
-                    if (error.message === "Command failed: printf '2\\n' | ./rkvac-protocol-multos-1.0.0 -v -a DBAdmin.att\n" +
-                    "[!] Socket bind failed!\n" +
-                    "[!] Connection error!") {
-                        console.log("YES YES");
-                    }
                     console.log(`stdout: ${stdout}`);
                     done(null, false, {message: 'Přístup odepřen'});
+                    var client = new net.Socket();
+                    const connect = () => {
+                        client.connect(5000)
+                    };
+                    client.once('connect', function () {
+                        console.log('Gonna destroy TCP socket');
+                        client.destroy();
+                    });
                     return;
                 }
                 if (stderr) {
