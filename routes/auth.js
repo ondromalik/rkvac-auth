@@ -96,7 +96,7 @@ passport.use('verify', new LocalStrategy(
                     client.on('connect', () => {
                         console.log('Gonna destroy TCP socket');
                         client.destroy();
-                    })
+                    });
                     connect();
                     return;
                 }
