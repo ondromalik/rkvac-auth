@@ -1,4 +1,16 @@
 {
+    document.getElementById('adminButton').addEventListener('click', () => {
+        startLoader();
+        let tableRows = document.getElementsByClassName('cardSelector');
+        let selectedCard = "";
+        for (let i = 0; i < tableRows.length; i++) {
+            if (tableRows[i].checked) {
+                selectedCard = tableRows[i];
+            }
+        }
+        connect(selectedCard.value);
+    })
+
     function startLoader() {
         document.getElementById('login-loader').hidden = false;
     }
@@ -12,7 +24,7 @@
         }
     }
 
-    async function contactCard(hexdata) {
+    async function contactCard(index, hexdata) {
         var _readers = await navigator.webcard.readers();
         let atr = await _readers[0].connect(true);
         console.log("APDU request: " + hexdata);
@@ -28,37 +40,55 @@
         }
         var _readers = await navigator.webcard.readers();
         if (_readers[0]) {
+            _readers.forEach((reader, index) => {
+                var node = document.createElement('li');
+                reader_ul.append(node)
+                node.outerHTML = `
+          <div class="" tabindex="${index}" onclick="testReader(${index})">
+                <input type="radio" class="w3-radio w3-bar-item cardSelector" name="cardIndex" value="${index}" onclick="enableLogin()">
+                    <label style="font-weight: bold">${reader.name}</label>
+                    <label style="font-style: italic">(${reader.atr === "" ? "Karta nevložená" : "Karta vložená"})</label>
+                </input>
+                </div>
+          `;
+
+            })
             document.getElementById('cardStatus').hidden = true;
-            document.getElementById('testCard').hidden = false;
-            var reader = _readers[0];
-            var node = document.createElement('li');
-            reader_ul.append(node)
-            node.outerHTML = `
-      <div class="" tabindex="${0}">
-              <span class="w3-center">
-                <p style="font-weight: bold">${reader.name}</p>
-                <p style="font-style: italic">${reader.atr === "" ? "Karta nevložena" : "Karta vložená"}</p>
-              </span>
-            </div>
-      `;
         }
         else {
             document.getElementById('reloadMessage').hidden = false;
         }
     }
 
-    function testReader() {
-        contactCard('00A40400077675743231303100').then(res => {
+    function enableLogin() {
+        document.getElementById('adminButton').disabled = false;
+        document.getElementById('teacherButton').disabled = false;
+        document.getElementById('studentButton').disabled = false;
+    }
+
+    function testReader(index) {
+        startCardLoader();
+        contactCard(index, '00A40400077675743231303100').then(res => {
+            hideCardLoader();
             if (res === '9000') {
                 document.getElementById("cardConnected").hidden = false;
                 document.getElementById("cardDisconnected").hidden = true;
             }
             console.log("APDU response: " + res);
         }).catch(function (error) {
+            hideCardLoader();
             document.getElementById("cardDisconnected").hidden = false;
             document.getElementById("cardConnected").hidden = true;
             console.log(error);
         });
+    }
+
+    function startCardLoader() {
+        document.getElementById('card-loader').hidden = false;
+    }
+
+    function hideCardLoader() {
+        document.getElementById('card-loader').hidden = true;
     }
 
     window.onload = ListReaders;

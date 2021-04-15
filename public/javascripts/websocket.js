@@ -19,7 +19,7 @@
         return hexStr.toUpperCase();
     }
 
-    async function contactCard(hexdata) {
+    async function contactCard(index, hexdata) {
         var _readers = await navigator.webcard.readers();
         if (!_readers[0]) {
             throw new Error('Card not connected');
@@ -30,13 +30,13 @@
         return res;
     }
 
-    function connect() {
+    function connect(index) {
         console.log("Connecting");
         const socket = new WebSocket('wss://' + location.hostname + ':' + location.port);
         socket.addEventListener('message', function (event) {
             blobToHex(event.data).then(hexStr => {
                 console.log("APDU request: " + hexStr);
-                contactCard(hexStr).then(returnMessage => {
+                contactCard(index, hexStr).then(returnMessage => {
                     console.log("APDU response: " + returnMessage);
                     socket.send(hexToBlob(returnMessage));
                 }).catch((error) => {
