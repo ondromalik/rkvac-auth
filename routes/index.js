@@ -652,12 +652,13 @@ const logData = {
 function loadLogs(userFile) {
     return new Promise((resolve, reject) => {
         try {
+            let i = 0;
             const fileStream = fs.createReadStream(userFile).on('error', reject);
             readline.createInterface({
                 input: fileStream,
                 console: false
             }).on('line', function (line) {
-                if (line !== '') {
+                if (line !== '' && i < 50) {
                     let words = line.split(' ').map(String);
                     if (words[2] === '') {
                         words.splice(2, 1);
@@ -667,6 +668,7 @@ function loadLogs(userFile) {
                     words.splice(2, 1);
                     words.splice(4, 1);
                     logData.rows.push(words);
+                    i++;
                 }
             }).on('close', function () {
                 resolve(logData);

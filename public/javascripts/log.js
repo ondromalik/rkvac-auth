@@ -24,10 +24,11 @@
         }
 
         //Populate rows
-        for (const row of logData.rows) {
+
+        for (let i = logData.rows.length - 1; i >= 0; i--) {
             table.querySelector("tbody").insertAdjacentHTML("beforeend", `
                 <tr>
-                    ${ row.map(col => `<td>${ col }</td>`).join("") }               
+                    ${ logData.rows[i].map(col => `<td>${ col }</td>`).join("") }               
                 </tr>
             `);
         }
