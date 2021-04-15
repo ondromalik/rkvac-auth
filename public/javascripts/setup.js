@@ -56,11 +56,13 @@
                     document.getElementById('deleteAdminButton').disabled = false;
                     document.getElementById('adminButton').disabled = true;
                     document.getElementById('adminButton').className = document.getElementById('adminButton').className.replace("w3-gray", "");
+                    document.getElementById('adminDetail').hidden = false;
                 } else if (!data.adminReady) {
                     document.getElementById('adminReady').hidden = true;
                     document.getElementById('adminNotReady').hidden = false;
                     document.getElementById('deleteAdminButton').disabled = true;
                     document.getElementById('adminButton').disabled = false;
+                    document.getElementById('adminDetail').hidden = true;
                 } else {
                     throw new Error('Request failed');
                 }
@@ -70,11 +72,13 @@
                     document.getElementById('deleteTeacherButton').disabled = false;
                     document.getElementById('teacherButton').disabled = true;
                     document.getElementById('teacherButton').className = document.getElementById('teacherButton').className.replace("w3-gray", "");
+                    document.getElementById('teacherDetail').hidden = false;
                 } else if (!data.teacherReady) {
                     document.getElementById('teacherReady').hidden = true;
                     document.getElementById('teacherNotReady').hidden = false;
                     document.getElementById('deleteTeacherButton').disabled = true;
                     document.getElementById('teacherButton').disabled = false;
+                    document.getElementById('teacherDetail').hidden = true;
                 }
                 if (data.studentReady) {
                     document.getElementById('studentReady').hidden = false;
@@ -82,11 +86,13 @@
                     document.getElementById('deleteStudentButton').disabled = false;
                     document.getElementById('studentButton').disabled = true;
                     document.getElementById('studentButton').className = document.getElementById('studentButton').className.replace("w3-gray", "");
+                    document.getElementById('studentDetail').hidden = false;
                 } else if (!data.studentReady) {
                     document.getElementById('studentReady').hidden = true;
                     document.getElementById('studentNotReady').hidden = false;
                     document.getElementById('deleteStudentButton').disabled = true;
                     document.getElementById('studentButton').disabled = false;
+                    document.getElementById('studentDetail').hidden = true;
                 }
             }).catch((error) => {
                 console.log(error);
@@ -377,6 +383,18 @@
         }
     });
 
+    document.getElementById('adminDetail').addEventListener('click', () => {
+        showAttributeInfo('DBAdmin.att', 'adminPosition.dat');
+    });
+
+    document.getElementById('teacherDetail').addEventListener('click', () => {
+        showAttributeInfo('DBTeacher.att', 'teacherPosition.dat');
+    });
+
+    document.getElementById('studentDetail').addEventListener('click', () => {
+        showAttributeInfo('DBStudent.att', 'studentPosition.dat');
+    });
+
     /* Functions */
 
     function activateApp() {
@@ -449,10 +467,68 @@
         });
     }
 
+    function showAttributeInfo(attributeName, disclosedName) {
+        let attribName = {
+            attributeName: attributeName,
+            disclosedName: disclosedName
+        }
+        fetch('/show-attribute', {
+            method: 'POST',
+            body: JSON.stringify(attribName),
+            headers: {'Content-Type': 'application/json'}
+        }).then(function (response) {
+            response.json().then((data) => {
+                if (data.success) {
+                    let list = document.getElementById('attributeList');
+                    while (list.firstChild) {
+                        list.removeChild(list.firstChild);
+                    }
+                    let header = list.createTHead();
+                    let row = header.insertRow(0);
+                    let th1 = document.createElement('th');
+                    let th2 = document.createElement('th');
+                    th1.innerHTML = "Název";
+                    th2.innerHTML = "Hodnota";
+                    row.appendChild(th1);
+                    row.appendChild(th2);
+                    for (let i = 0; i < data.names.length; i++) {
+                        let row = list.insertRow(i+1);
+                        let cell1 = row.insertCell(0);
+                        let cell2 = row.insertCell(1);
+                        cell1.innerHTML = data.names[i] + ":";
+                        cell2.innerHTML = data.attributes[i];
+                    }
+                    let card = document.getElementById('disclosedContainer');
+                    while (card.firstChild) {
+                        card.removeChild(card.firstChild);
+                    }
+                    let label = document.createElement('label');
+                    label.innerHTML = "Odhaleny atribúty: " + data.disclosedAttributes;
+                    card.appendChild(label);
+                    document.getElementById('attributeInfo').style.display = 'block';
+                    return;
+                }
+                if (!data.success) {
+                    return;
+                }
+                throw new Error('Request failed.');
+            }).catch(function (error) {
+                console.log(error);
+            });
+        })
+    }
+
     function hideMessages() {
         let messages = document.getElementsByClassName("message");
         for (let i = 0; i < messages.length; i++) {
             messages[i].hidden = true;
+        }
+    }
+
+    window.onclick = function (event) {
+        let modal = document.getElementById('attributeInfo');
+        if (event.target === modal) {
+            modal.style.display = "none";
         }
     }
 }

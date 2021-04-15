@@ -76,6 +76,7 @@ passport.use('verify', new LocalStrategy(
             if (err) {
                 console.log(err);
                 done(null, false, {message: 'Přístup odepřen - chyba v RKVAC'});
+                return;
             }
             var command = "printf '" + data + "\\n' | ./rkvac-protocol-multos-1.0.0 -v -a " + requestedAccess;
             exec(command, (error, stdout, stderr) => {

@@ -546,6 +546,37 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
     res.json({success: true});
 });
 
+router.post('/show-attribute', require('permission')(['admin']), (req, res) => {
+    let response = {
+        names: [],
+        attributes: [],
+        disclosedAttributes: ""
+    }
+    fs.readFile('./data/Verifier/' + req.body.disclosedName, 'utf-8', (err, data) => {
+        if (!err) {
+            response.disclosedAttributes = data;
+            const fileStream = fs.createReadStream('./data/Verifier/' + req.body.attributeName).on('error', () => {
+                res.json({success: false});
+            });
+            readline.createInterface({
+                input: fileStream,
+                console: false
+            }).on('line', function (line) {
+                if (line !== '') {
+                    let words = line.split(';').map(String);
+                    response.names.push(words[0]);
+                    response.attributes.push(words[1]);
+                }
+            }).on('close', function () {
+                res.json({success: true, names: response.names, attributes: response.attributes, disclosedAttributes: response.disclosedAttributes});
+            });
+        }
+        else {
+            res.json({success: false});
+        }
+    });
+});
+
 router.post('/saveRAAddress', require('permission')(['admin']), (req, res) => {
     fs.writeFile('./data/Verifier/RAAddress.dat', req.body.RAAddress, 'utf8', (err) => {
         if (err) {

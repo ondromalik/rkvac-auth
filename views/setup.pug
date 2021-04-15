@@ -78,26 +78,37 @@ block content
                         th Stav
                         th Akce
                 tr
-                    td Admin
+                    td(style="width:35%") Admin
+                        i(class="fas fa-info-circle w3-bar-item w3-button w3-hover-none" id='adminDetail' hidden=true)
                     td
                         p.w3-text-green(id="adminReady" hidden=true) připraveno
                         p.w3-text-red(id="adminNotReady") nepřipraveno
                     td
                         button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteAdminButton' disabled=true) Vymazat
                 tr
-                    td Vyučující
+                    td(style="width:35%") Vyučující
+                        i(class="fas fa-info-circle w3-bar-item w3-button w3-hover-none" id='teacherDetail' hidden=true)
                     td
                         p.w3-text-green(id="teacherReady" hidden=true) připraveno
                         p.w3-text-red(id="teacherNotReady") nepřipraveno
                     td
                         button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteTeacherButton' disabled=true) Vymazat
                 tr
-                    td Student
+                    td(style="width:35%") Student
+                        i(class="fas fa-info-circle w3-bar-item w3-button w3-hover-none" id='studentDetail' hidden=true)
                     td
                         p.w3-text-green(id="studentReady" hidden=true) připraveno
                         p.w3-text-red(id="studentNotReady") nepřipraveno
                     td
                         button.w3-button.w3-round-medium.w3-light-gray.w3-text-black.w3-border.w3-border-grey.w3-padding-small(type='submit' id='deleteStudentButton' disabled=true) Vymazat
+            div.w3-modal(id="attributeInfo")
+                div.w3-modal-content.w3-card-4(style="width:30%")
+                    header.w3-container.w3-cyan
+                        span.w3-button.w3-display-topright(onclick="document.getElementById('attributeInfo').style.display='none'") &times;
+                        h4 Detaily pověření
+                    div.w3-container
+                        table.w3-table-all.w3-margin-bottom.w3-margin-top(id='attributeList')
+                    div.w3-container(id="disclosedContainer")
         //hr
         div.w3-container.w3-light-gray.w3-padding.w3-margin-top(id="newAttributePanel")
             h4 Nové pověření:
