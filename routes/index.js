@@ -654,6 +654,9 @@ router.get('/refreshLog', require('permission')(['admin']), function (req, res) 
             rows: data.rows
         })
     }).catch(err => {
+        res.json({
+            success: false
+        })
         console.log('Error: ' + err);
     })
 });

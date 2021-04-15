@@ -37,21 +37,26 @@
       <div class="" tabindex="${0}">
               <span class="w3-center">
                 <p style="font-weight: bold">${reader.name}</p>
-                <p style="font-style: italic">${reader.atr === "" ? "Karta nevložená" : "Karta vložená"}</p>
+                <p style="font-style: italic">${reader.atr === "" ? "Karta nevložena" : "Karta vložená"}</p>
               </span>
             </div>
       `;
         }
+        else {
+            document.getElementById('reloadMessage').hidden = false;
+        }
     }
 
     function testReader() {
-        contactCard('00A4040000').then(res => {
+        contactCard('00A40400077675743231303100').then(res => {
             if (res === '9000') {
                 document.getElementById("cardConnected").hidden = false;
+                document.getElementById("cardDisconnected").hidden = true;
             }
             console.log("APDU response: " + res);
         }).catch(function (error) {
             document.getElementById("cardDisconnected").hidden = false;
+            document.getElementById("cardConnected").hidden = true;
             console.log(error);
         });
     }

@@ -7,6 +7,12 @@
             console.log(error);
         });
         const logData = await response.json();
+        let date = new Date();
+        let dateFormat = date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes() + ":" + (date.getSeconds()<10?'0':'') + date.getSeconds();
+        document.getElementById('updatedDate').innerHTML = "Aktualizováno: " + dateFormat;
+        if (logData.success === false) {
+            return;
+        }
 
         //Clear table
         table.querySelector("thead tr").innerHTML = "";
@@ -48,8 +54,13 @@
         root.append(table);
 
         btnRefreshLog.addEventListener('click', function (e) {
-            console.log('Button clicked!');
-            refreshTable(root);
+            btnRefreshLog.className += " table-refresh__button--refreshing";
+            refreshTable(root).then(() => {
+                btnRefreshLog.className = btnRefreshLog.className.replace(" table-refresh__button--refreshing", "");
+            }).catch((error) => {
+                console.log(error);
+                btnRefreshLog.className = btnRefreshLog.className.replace(" table-refresh__button--refreshing", "");
+            });
         });
 
         refreshTable(root);
