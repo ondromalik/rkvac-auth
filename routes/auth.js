@@ -82,7 +82,7 @@ passport.use('verify', new LocalStrategy(
             exec(command, (error, stdout, stderr) => {
                 if (error) {
                     console.log(`error: ${error.message}`);
-                    if (error.message === "error: Command failed: printf '2\\n' | ./rkvac-protocol-multos-1.0.0 -v -a DBAdmin.att\n" +
+                    if (error.message === "Command failed: printf '2\\n' | ./rkvac-protocol-multos-1.0.0 -v -a DBAdmin.att\n" +
                     "[!] Socket bind failed!\n" +
                     "[!] Connection error!") {
                         console.log("YES YES");
