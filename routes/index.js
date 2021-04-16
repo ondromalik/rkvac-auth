@@ -28,6 +28,23 @@ router.use(auth.session());
 
 router.use(flash());
 
+function logOutput(stdout, err, stderr) {
+    let date = new Date();
+    let dateFormat = date.getFullYear() + '/' + (date.getMonth() < 10 ? '0' : '') + date.getMonth() + '/' + (date.getDate() < 10 ? '0' : '') + date.getDate() + ' ' +
+        date.getHours() + ":" + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ":" + (date.getSeconds() < 10 ? '0' : '') + date.getSeconds() + ' ';
+    if (err) {
+        stdout += '\n' + 'error: ' + err;
+    }
+    if (stderr) {
+        stdout += '\n' + 'stderr: ' + stderr;
+    }
+    fs.appendFile('./main.log', dateFormat + stdout + '\n', 'utf-8', (err) => {
+        if (err) {
+            console.log(err);
+        }
+    });
+}
+
 router.get('/login', function (req, res) {
     let message = JSON.stringify(req.flash('error'));
     if (message !== '[]') {
@@ -196,12 +213,15 @@ socket.on('end', function () {
     exec('./rkvac-protocol-multos-1.0.0 -v -w ./data/Verifier/ra_BL_epoch_' + currentEpoch + '_C_for_verifier.dat', (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
+            logOutput(stdout, error, stderr);
             return;
         }
         if (stderr) {
             console.log(`stderr: ${stderr}`);
+            logOutput(stdout, error, stderr);
             return;
         }
+        logOutput(stdout, error, stderr);
         console.log(`stdout: ${stdout}`);
     });
 });
@@ -213,13 +233,16 @@ async function updateBlacklist() {
         if (error) {
             console.log(`stdout: ${stdout}`);
             console.log(`error: ${error.message}`);
+            logOutput(stdout, error, stderr);
             return;
         }
         if (stderr) {
             console.log(`stdout: ${stdout}`);
             console.log(`stderr: ${stderr}`);
+            logOutput(stdout, error, stderr);
             return;
         }
+        logOutput(stdout, error, stderr);
         console.log(`stdout: ${stdout}`);
     });
 }
@@ -265,6 +288,7 @@ router.get('/initiateRKVAC', require('permission')(['admin']), (req, res) => {
         if (err) {
             console.log(err);
         }
+        logOutput("RKVAC was initiated", err);
         res.redirect('/setup');
     })
 });
@@ -359,12 +383,18 @@ router.get('/check-epoch', require('permission')(['admin']), (req, res) => {
     });
 });
 
+router.get('/downloadLog', require('permission')(['admin']), (req, res) => {
+    const file = './main.log';
+    res.download(file);
+});
+
 router.get('/deleteRAAddress', require('permission')(['admin']), (req, res) => {
     fs.unlink('./data/Verifier/RAAddress.dat', (err) => {
         if (err) {
             console.error(err)
             return
         }
+        logOutput('./data/Verifier/RAAddress.dat deleted', err);
         res.json({success: true});
     })
 });
@@ -373,17 +403,20 @@ router.get('/createNewEpoch', require('permission')(['admin']), (req, res) => {
     exec('./rkvac-protocol-multos-1.0.0 -v -e', (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
+            logOutput(stdout, error, stderr);
             res.json({success: false});
             return;
         }
         if (stderr) {
             console.log(`stderr: ${stderr}`);
+            logOutput(stdout, error, stderr);
             res.json({success: false});
             return;
         }
         console.log(`stdout: ${stdout}`);
         let RAAddress = fs.readFileSync('./data/Verifier/RAAddress.dat', 'utf-8');
         connect(RAAddress);
+        logOutput(stdout, error, stderr);
         res.json({success: true});
     });
 });
@@ -398,6 +431,7 @@ router.post('/deleteKey', require('permission')(['admin']), (req, res) => {
             console.error(err)
             return
         }
+        logOutput('./data/Verifier/' + req.body.filename + ' was deleted');
         res.json({success: true});
     })
 });
@@ -434,6 +468,7 @@ router.post('/uploadIEKey', require('permission')(['admin']), (req, res) => {
         } else if (err) {
             return res.send(err);
         }
+        logOutput('ie_sk.dat uploaded');
         res.redirect('/setup');
     });
 });
@@ -451,6 +486,7 @@ router.post('/uploadRAKey', require('permission')(['admin']), (req, res) => {
         } else if (err) {
             return res.send(err);
         }
+        logOutput('ra_pk.dat uploaded');
         res.redirect('/setup');
     });
 });
@@ -468,6 +504,7 @@ router.post('/uploadRAParams', require('permission')(['admin']), (req, res) => {
         } else if (err) {
             return res.send(err);
         }
+        logOutput('ra_public_parameters.dat uploaded');
         res.redirect('/setup');
     });
 });
@@ -479,6 +516,7 @@ router.post('/deleteAttribute', require('permission')(['admin']), (req, res) => 
             console.error(err)
             return
         }
+        logOutput('./data/Verifier/' + req.body.filename + " was deleted");
         res.json({success: true});
     });
 });
@@ -516,13 +554,16 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
         if (error) {
             console.log(`error: ${error.message}`);
             console.log(`stdout: ${stdout}`);
+            logOutput(stdout, error, stderr);
             return;
         }
         if (stderr) {
             console.log(`stdout: ${stdout}`);
             console.log(`stderr: ${stderr}`);
+            logOutput(stdout, error, stderr);
             return;
         }
+        logOutput(stdout, error, stderr);
         console.log(`stdout: ${stdout}`);
     });
     if (req.body.disclosedAttributes === "") {
@@ -531,6 +572,7 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
                 console.log(err);
                 return;
             }
+            logOutput("Disclosed attributes details written to " + positionFile);
             console.log("Disclosed attributes details written to " + positionFile);
         });
     }
@@ -540,6 +582,7 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
                 console.log(err);
                 return;
             }
+            logOutput("Disclosed attributes details written to " + positionFile);
             console.log("Disclosed attributes details written to " + positionFile);
         });
     }
@@ -583,6 +626,7 @@ router.post('/saveRAAddress', require('permission')(['admin']), (req, res) => {
             console.log(err);
             return;
         }
+        logOutput("RA address written to ./data/Verifier/RAAddress.dat");
         console.log("RA address written to ./data/Verifier/RAAddress.dat");
         res.json({success: true});
     });
@@ -598,13 +642,16 @@ router.post('/scheduleNewEpoch', require('permission')(['admin']), (req, res) =>
         exec('./rkvac-protocol-multos-1.0.0 -v -e', (error, stdout, stderr) => {
             if (error) {
                 console.log(`error: ${error.message}`);
+                logOutput(stdout, error, stderr);
                 return;
             }
             if (stderr) {
                 console.log(`stderr: ${stderr}`);
+                logOutput(stdout, error, stderr);
                 return;
             }
             console.log(`stdout: ${stdout}`);
+            logOutput(stdout, error, stderr);
             let RAAddress = fs.readFileSync('./data/Verifier/RAAddress.dat', 'utf-8');
             connect(RAAddress);
         });
@@ -615,6 +662,7 @@ router.post('/scheduleNewEpoch', require('permission')(['admin']), (req, res) =>
             console.log(err);
             return;
         }
+        logOutput("New cron successfully scheduled");
         console.log("Cron saved to ./data/Verifier/epochCron.dat");
     });
 });
@@ -627,6 +675,7 @@ router.post('/destroyEpoch', require('permission')(['admin']), (req, res) => {
             console.error(err)
             return
         }
+        logOutput("Cron destroyed", err);
         console.log("Cron destroyed");
     });
 });
@@ -638,6 +687,7 @@ router.post('/deleteData', require('permission')(['admin']), (req, res) => {
             res.json({success: false});
             return;
         }
+        logOutput("RKVAC reseted", err);
         res.json({success: true});
     });
 });
