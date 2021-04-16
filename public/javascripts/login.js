@@ -59,7 +59,7 @@
 
     async function ListReaders() {
         var reader_ul = document.getElementById('readerList');
-        if (reader_ul.firstChild) {
+        while (reader_ul.firstChild) {
             reader_ul.removeChild(reader_ul.firstChild);
         }
         var _readers = await navigator.webcard.readers();
