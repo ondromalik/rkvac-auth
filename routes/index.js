@@ -549,7 +549,7 @@ router.post('/createAttribute', require('permission')(['admin']), (req, res) => 
             positionFile = "./data/Verifier/studentPosition.dat";
             break;
     }
-    command += "./rkvac-protocol-multos-1.0.0 -v -a " + attribFile;
+    command += "./rkvac-protocol-multos-1.0.0 -v -c " + attribFile;
     exec(command, {timeout: 3000}, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
