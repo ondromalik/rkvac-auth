@@ -82,22 +82,9 @@ passport.use('verify', new LocalStrategy(
             var command = "printf '" + data + "\\n' | ./rkvac-protocol-multos-1.0.0 -v -a " + requestedAccess;
             exec(command, (error, stdout, stderr) => {
                 if (error) {
-                    console.log(`error: ${error.message}`);
                     console.log(`stdout: ${stdout}`);
+                    console.log(`error: ${error.message}`);
                     done(null, false, {message: 'Přístup odepřen'});
-                    var client = new net.Socket();
-                    const connect = () => {
-                        client.connect(5000)
-                    };
-                    client.on('error', function () {
-                        console.log('Gonna destroy TCP socket');
-                        client.destroy();
-                    });
-                    client.on('connect', () => {
-                        console.log('Gonna destroy TCP socket');
-                        client.destroy();
-                    });
-                    connect();
                     return;
                 }
                 if (stderr) {
