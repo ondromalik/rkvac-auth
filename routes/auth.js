@@ -10,7 +10,7 @@ var userDB = {
         {
             _id: 1,
             username: 'admin',
-            password: 'cW33/8VSFfz5/expPXQikyaDdNVf9dkmXmCgsJ5tn4o=',
+            password: '',
             role: 'admin'
         },
         {
@@ -38,6 +38,11 @@ passport.use('login', new LocalStrategy(
     function (username, password, done) {
         let hashedPassword = getHashedPassword(password);
         let userFound = false;
+        try {
+            userDB.user[0].password = fs.readFileSync('./passwd').toString();
+        } catch (e) {
+            console.log(e);
+        }
         for (user of userDB.user) {
             if (user.username === username) {
                 if (user.password === hashedPassword) {

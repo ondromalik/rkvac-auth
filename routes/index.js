@@ -11,6 +11,7 @@ const {exec} = require("child_process");
 const net = require('net');
 var cron = require('node-cron');
 const readline = require('readline');
+const crypto = require('crypto');
 
 router.use(session({
     secret: 'some-secret',
@@ -89,6 +90,10 @@ router.post('/verify',
         failureFlash: true
     })
 );
+
+router.get('/change-password', require('permission')(['admin']), function (req, res, next) {
+    res.render('password-form', {username: req.user.username});
+});
 
 var class_controller = require('../controllers/classController');
 var teacher_controller = require('../controllers/teacherController');
@@ -742,6 +747,38 @@ router.get('/refreshLog', require('permission')(['admin']), function (req, res) 
         })
         console.log('Error: ' + err);
     })
+});
+
+// Change password
+const getHashedPassword = (password) => {
+    const sha256 = crypto.createHash('sha256');
+    return sha256.update(password).digest('base64');
+}
+
+router.post('/change-password', require('permission')(['admin']), (req, res) => {
+    fs.readFile('./passwd', (err, data) => {
+        if (err) {
+            console.log(err);
+            res.render('password-form', {message: "Požadavek nebyl úspěšný", username: req.user.username});
+            return;
+        }
+        if (data.toString() !== getHashedPassword(req.body.passwordOld)) {
+            res.render('password-form', {message: "Nesprávné staré heslo", username: req.user.username});
+            return;
+        }
+        if (req.body.passwordNew !== req.body.passwordNew2) {
+            res.render('password-form', {message: "Heslá se nezhodují", username: req.user.username});
+            return;
+        }
+        fs.writeFile('./passwd', getHashedPassword(req.body.passwordNew), err1 => {
+            if (err1) {
+                console.log(err1);
+                res.render('password-form', {message: "Požadavek nebyl úspěšný", username: req.user.username});
+                return;
+            }
+            res.render('password-form', {successMessage: "Heslo změnené", username: req.user.username});
+        });
+    });
 });
 
 module.exports = router;
