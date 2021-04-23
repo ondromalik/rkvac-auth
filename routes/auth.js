@@ -53,10 +53,15 @@ passport.use('login', new LocalStrategy(
         }
     }
 ));
-
+let rkvacUsed = false;
 passport.use('verify', new LocalStrategy(
     {passwordField: 'userrole', passReqToCallback: true},
     function (req, username, password, done) {
+        if (rkvacUsed) {
+            done(null, false, {message: 'RKVAC knihovna je práve používána, skuste za chvíli'});
+            return;
+        }
+        rkvacUsed = true;
         let requestedAccess;
         let positionFile = "";
         switch (req.body.userrole) {
@@ -77,6 +82,7 @@ passport.use('verify', new LocalStrategy(
             if (err) {
                 console.log(err);
                 done(null, false, {message: 'Přístup odepřen - chyba v RKVAC'});
+                rkvacUsed = false;
                 return;
             }
             var command = "printf '" + data + "\\n' | ./rkvac-protocol-multos-1.0.0 -v -a " + requestedAccess;
@@ -85,17 +91,20 @@ passport.use('verify', new LocalStrategy(
                     console.log(`stdout: ${stdout}`);
                     console.log(`error: ${error.message}`);
                     done(null, false, {message: 'Přístup odepřen'});
+                    rkvacUsed = false;
                     return;
                 }
                 if (stderr) {
                     console.log(`stderr: ${stderr}`);
                     console.log(`stdout: ${stdout}`);
                     done(null, false, {message: 'Přístup odepřen'});
+                    rkvacUsed = false;
                     return;
                 }
                 console.log(`stdout: ${stdout}`);
                 for (user of userDB.user) {
                     if (user.username === username) {
+                        rkvacUsed = false;
                         return done(null, user);
                     }
                 }
