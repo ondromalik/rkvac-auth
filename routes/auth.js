@@ -90,14 +90,19 @@ passport.use('verify', new LocalStrategy(
                 if (error) {
                     console.log(`stdout: ${stdout}`);
                     console.log(`error: ${error.message}`);
-                    done(null, false, {message: 'Přístup odepřen'});
+                    if (error.message.includes('ACCESS DENIED')) {
+                        done(null, false, {message: 'Přístup odepřen'});
+                    }
+                    else {
+                        done(null, false, {message: 'Požadavek se nezdařil'});
+                    }
                     rkvacUsed = false;
                     return;
                 }
                 if (stderr) {
                     console.log(`stderr: ${stderr}`);
                     console.log(`stdout: ${stdout}`);
-                    done(null, false, {message: 'Přístup odepřen'});
+                    done(null, false, {message: 'Požadavek se nezdařil'});
                     rkvacUsed = false;
                     return;
                 }
