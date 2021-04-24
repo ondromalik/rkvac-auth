@@ -251,42 +251,57 @@ async function updateBlacklist() {
         console.log(`stdout: ${stdout}`);
     });
 }
-
 const revokeServer = net.createServer((c) => {
     // 'connection' listener.
-    console.log('client connected');
-    c.setEncoding('utf-8');
-    c.on('end', () => {
-        console.log('client disconnected');
-    });
-    c.on('data', function (data) {
-        fs.appendFile('./data/Verifier/ra_BL_epoch_' + currentEpoch + '_C_for_verifier.dat', data, (err) => {
-            if (err) {
-                console.log(err);
-            }
-            console.log('Data written to ./data/Verifier/ra_BL_epoch_' + currentEpoch + '_C_for_verifier.dat');
-            updateBlacklist().then(() => {
-                console.log("Blacklist updated");
-                c.end();
+    let raAddress = '';
+    try {
+        raAddress = fs.readFileSync('./data/Verifier/RAAddress.dat').toString();
+    } catch (e) {
+        console.log(e);
+    }
+    if (!(raAddress === c.remoteAddress)) {
+        console.log("Client " + c.remoteAddress + " not permitted");
+        logOutput("Client " + c.remoteAddress + " not permitted");
+        c.end();
+    }
+    else {
+        console.log("Client " + c.remoteAddress + " permitted");
+        logOutput("Client " + c.remoteAddress + " permitted");
+        c.setEncoding('utf-8');
+        c.on('end', () => {
+            console.log('client disconnected');
+        });
+        c.on('data', function (data) {
+            fs.appendFile('./data/Verifier/ra_BL_epoch_' + currentEpoch + '_C_for_verifier.dat', data, (err) => {
+                if (err) {
+                    console.log(err);
+                    logOutput(err);
+                }
+                console.log('Data written to ./data/Verifier/ra_BL_epoch_' + currentEpoch + '_C_for_verifier.dat');
+                logOutput('Data written to ./data/Verifier/ra_BL_epoch_' + currentEpoch + '_C_for_verifier.dat');
+                updateBlacklist().then(() => {
+                    console.log("Blacklist updated");
+                    logOutput("Blacklist updated");
+                    c.end();
+                });
             });
         });
-    });
-    c.on('error', (err) => {
-        console.log(err);
-    });
-    c.setTimeout(10000);
-    c.on('timeout', () => {
-        console.log("Terminating connection");
-        c.destroy();
-    });
+        c.on('error', (err) => {
+            console.log(err);
+        });
+        c.setTimeout(10000);
+        c.on('timeout', () => {
+            console.log("Terminating connection");
+            c.destroy();
+        });
+    }
 });
 revokeServer.on('error', (err) => {
     throw err;
 });
-revokeServer.listen({host: 'localhost', port: 5003, exclusive: true}, () => {
+revokeServer.listen({port: 5003, host: '0.0.0.0', exclusive: true}, () => {
     console.log('server bound');
 });
-
 
 router.get('/initiateRKVAC', require('permission')(['admin']), (req, res) => {
     fs.mkdir('./data/Verifier', {recursive: true}, err => {

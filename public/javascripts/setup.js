@@ -262,7 +262,7 @@
     document.getElementById('saveRAAddress').addEventListener('click', () => {
         let RAAddress = document.getElementById('RAAddress').value;
         if (RAAddress === "") {
-            RAAddress = "localhost"
+            RAAddress = "127.0.0.1"
         }
         let RA = {
             RAAddress: RAAddress
