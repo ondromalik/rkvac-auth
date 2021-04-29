@@ -79,9 +79,6 @@
             })
             document.getElementById('cardStatus').hidden = true;
         }
-        else {
-            document.getElementById('reloadMessage').hidden = false;
-        }
     }
 
     function enableLogin() {
