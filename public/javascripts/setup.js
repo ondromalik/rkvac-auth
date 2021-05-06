@@ -487,8 +487,8 @@
                     let row = header.insertRow(0);
                     let th1 = document.createElement('th');
                     let th2 = document.createElement('th');
-                    th1.innerHTML = "Název";
-                    th2.innerHTML = "Hodnota";
+                    th1.innerHTML = "Title";
+                    th2.innerHTML = "Value";
                     row.appendChild(th1);
                     row.appendChild(th2);
                     for (let i = 0; i < data.names.length; i++) {
@@ -503,7 +503,7 @@
                         card.removeChild(card.firstChild);
                     }
                     let label = document.createElement('label');
-                    label.innerHTML = "Odhaleny atribúty: " + data.disclosedAttributes;
+                    label.innerHTML = "Disclosed attributes: " + data.disclosedAttributes;
                     card.appendChild(label);
                     document.getElementById('attributeInfo').style.display = 'block';
                     return;
