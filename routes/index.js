@@ -715,7 +715,7 @@ router.post('/deleteData', require('permission')(['admin']), (req, res) => {
 ////// LOGGING FUNCTIONS //////
 
 const logData = {
-    headers: ["Den", "Čas", "Číslo epochy", "Pseudonym", "Výsledek"],
+    headers: ["Day", "Time", "Epoch number", "Pseudonym", "Result"],
     rows: []
 };
 
@@ -774,24 +774,24 @@ router.post('/change-password', require('permission')(['admin']), (req, res) => 
     fs.readFile('./passwd', (err, data) => {
         if (err) {
             console.log(err);
-            res.render('password-form', {message: "Požadavek nebyl úspěšný", username: req.user.username});
+            res.render('password-form', {message: "Request failed", username: req.user.username});
             return;
         }
         if (data.toString() !== getHashedPassword(req.body.passwordOld)) {
-            res.render('password-form', {message: "Nesprávné staré heslo", username: req.user.username});
+            res.render('password-form', {message: "Incorrect old password", username: req.user.username});
             return;
         }
         if (req.body.passwordNew !== req.body.passwordNew2) {
-            res.render('password-form', {message: "Heslá se nezhodují", username: req.user.username});
+            res.render('password-form', {message: "New passwords don't match", username: req.user.username});
             return;
         }
         fs.writeFile('./passwd', getHashedPassword(req.body.passwordNew), err1 => {
             if (err1) {
                 console.log(err1);
-                res.render('password-form', {message: "Požadavek nebyl úspěšný", username: req.user.username});
+                res.render('password-form', {message: "Request failed", username: req.user.username});
                 return;
             }
-            res.render('password-form', {successMessage: "Heslo změnené", username: req.user.username});
+            res.render('password-form', {successMessage: "Password changed", username: req.user.username});
         });
     });
 });

@@ -15,20 +15,20 @@ html(lang='en')
             block sidebar
                 div.w3-center
                     img(rel='image' src="/images/FEKT_ZKR.svg" alt="VUT" style="width:90%")
-                a.w3-bar-item.w3-button(href='/' style="text-decoration: none") Domov
-                a.w3-bar-item.w3-button(href='/classes' style="text-decoration: none") Předměty
-                a.w3-bar-item.w3-button(href='/teachers' style="text-decoration: none") Vyučující
-                a.w3-bar-item.w3-button(href='/departments' style="text-decoration: none") Ústavy
+                a.w3-bar-item.w3-button(href='/' style="text-decoration: none") Home
+                a.w3-bar-item.w3-button(href='/classes' style="text-decoration: none") Classes
+                a.w3-bar-item.w3-button(href='/teachers' style="text-decoration: none") Teacher
+                a.w3-bar-item.w3-button(href='/departments' style="text-decoration: none") Departments
                 if username === 'admin' || username === 'teacher'
                     hr
-                    a.w3-bar-item.w3-button(href='/class/create' style="text-decoration: none") Nový předmět
-                    a.w3-bar-item.w3-button(href='/teacher/create' style="text-decoration: none") Nový vyučující
-                    a.w3-bar-item.w3-button(href='/department/create' style="text-decoration: none") Nový ústav
+                    a.w3-bar-item.w3-button(href='/class/create' style="text-decoration: none") New class
+                    a.w3-bar-item.w3-button(href='/teacher/create' style="text-decoration: none") New teacher
+                    a.w3-bar-item.w3-button(href='/department/create' style="text-decoration: none") New department
                 if username === 'admin'
                     hr
-                    a.w3-bar-item.w3-button(href='/setup' style="text-decoration: none") Nastavení
-                    a.w3-bar-item.w3-button(href='/log' style="text-decoration: none") Přístupové logy
-                    a.w3-bar-item.w3-button(href='/change-password' style="text-decoration: none") Změna hesla
+                    a.w3-bar-item.w3-button(href='/setup' style="text-decoration: none") Setup
+                    a.w3-bar-item.w3-button(href='/log' style="text-decoration: none") Access logs
+                    a.w3-bar-item.w3-button(href='/change-password' style="text-decoration: none") Change password
 
         div(style="margin-left:13%")
             block content

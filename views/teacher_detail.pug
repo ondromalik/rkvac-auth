@@ -7,7 +7,7 @@ block content
             div.w3-cell(style="width:80%")
                 h1 #{teacher.name}
             div.w3-cell.w3-cell-middle.w3-center
-                h5 Přihlášen: #[i #{username}]
+                h5 Logged in: #[i #{username}]
             div.w3-cell.w3-cell-middle
                 a.w3-button.w3-hover-none(href="/logout")
                     i(class="fas fa-sign-out-alt fa-lg")
@@ -15,13 +15,13 @@ block content
     div.w3-container.w3-padding-16(style="margin-right:35%")
         p #[strong ID: ] #{teacher.id_number}
         p #[strong Email: ] #{teacher.email_address}
-        p #[strong Předměty vyučujícího: ]
+        p #[strong Teacher's classes: ]
         div
             table.w3-table-all
                 thead
                     tr.w3-light-gray
-                        th Zkratka
-                        th Název
+                        th Shortcut
+                        th Title
                 each Class in teacher_classes
                     tr
                         td #{Class.abbreviation}
@@ -29,13 +29,13 @@ block content
                             a(href=Class.url) #{Class.title}
                 else
                     tr
-                        td Tento vyučující nemá žádné předměty
+                        td This teacher doesn't have any classes
 
     div.w3-cell-row.w3-padding
         div.w3-cell
-            a.w3-button.w3-border.w3-round-medium(href=teacher.url + '/update') Upravit
+            a.w3-button.w3-border.w3-round-medium(href=teacher.url + '/update') Edit
         div.w3-cell
-            a.w3-button.w3-border.w3-round-medium(href=teacher.url + '/delete') Vymazat
+            a.w3-button.w3-border.w3-round-medium(href=teacher.url + '/delete') Delete
         div.w3-cell(style="width:80%")
 
 

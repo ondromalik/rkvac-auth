@@ -7,9 +7,9 @@ block content
     table.w3-table-all.w3-margin(style="width:95%")
         thead
             tr.w3-light-gray
-                th Zkratka
-                th Název
-                th Vyučující
+                th Shortcut
+                th Title
+                th Teacher
         - class_list.sort(function(a, b) {let textA = a.title.toUpperCase(); let textB = b.title.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
          each Class in class_list
              tr
@@ -20,4 +20,4 @@ block content
 
          else
             tr
-                td Seznam předmětů je prázdný
+                td List of classes is empty

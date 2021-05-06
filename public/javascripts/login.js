@@ -71,7 +71,7 @@
           <div class="" tabindex="${index}" onclick="testReader(${index})">
                 <input type="radio" class="w3-radio w3-bar-item cardSelector" name="cardIndex" value="${index}" onclick="enableLogin()">
                     <label style="font-weight: bold">${reader.name}</label>
-                    <label style="font-style: italic">(${reader.atr === "" ? "Karta nevložená" : "Karta vložená"})</label>
+                    <label style="font-style: italic">(${reader.atr === "" ? "Card not inserted" : "Card inserted"})</label>
                 </input>
                 </div>
           `;

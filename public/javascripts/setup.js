@@ -364,7 +364,7 @@
     })
 
     document.getElementById('resetRKVAC').addEventListener('click', () => {
-        var really = confirm("Chystáte se vymazat veškerou RKVAC konfiguraci.\nPřejete si pokračovat?");
+        var really = confirm("You are about to delete all RKVAC configuration\nDo you want to continue?");
         if (really) {
             fetch("/deleteData", {
                 method: 'POST'

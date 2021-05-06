@@ -6,7 +6,7 @@ block content
             div.w3-cell(style="width:80%")
                 h1 #{title}
             div.w3-cell.w3-cell-middle.w3-center
-                h5 Přihlášen: #[i #{username}]
+                h5 Logged in: #[i #{username}]
             div.w3-cell.w3-cell-middle
                 a.w3-button.w3-hover-none(href="/logout")
                     i(class="fas fa-sign-out-alt fa-lg")
@@ -14,25 +14,25 @@ block content
     div.w3-container.w3-padding-16(style="margin-right:35%")
         form.w3-container(method='POST' action='' style="padding-bottom: 16px")
             div.form-group
-                label(for='firstname') Jméno:
+                label(for='firstname') Name:
                 input#firstname.form-control(class="w3-input;w3-border;w3-round-medium" type='text' name='firstname' required='true' value=(undefined === teacher ? '' : teacher.firstname) )
             div.form-group
-                label(for='surname') Přijmení:
+                label(for='surname') Surname:
                 input#surname.form-control(class="w3-input;w3-border;w3-round-medium" type='text' name='surname' required='true' value=(undefined === teacher ? '' : teacher.surname))
             div.form-group
-                label(for='title_before') Tituly před jménem:
+                label(for='title_before') Titles before name:
                 input#title_before.form-control(class="w3-input;w3-border;w3-round-medium" type='text' name='title_before' value=(undefined === teacher ? '' : teacher.title_before) )
             div.form-group
-                label(for='title_after') Tituly za jménem:
+                label(for='title_after') Titles after name:
                 input#title_after.form-control(class="w3-input;w3-border;w3-round-medium" type='text' name='title_after' value=(undefined === teacher ? '' : teacher.title_after) )
             div.form-group
-                label(for='id_number') ID číslo:
+                label(for='id_number') ID number:
                 input#id_number.form-control(class="w3-input;w3-border;w3-round-medium" type='text' name='id_number' value=(undefined === teacher ? '' : teacher.id_number) )
             div.form-group
-                label(for='email_address') Emailová adresa:
+                label(for='email_address') Email address:
                 input#email_address.form-control(class="w3-input;w3-border;w3-round-medium" type='text' name='email_address' value=(undefined === teacher ? '' : teacher.email_address) )
             div.w3-right-align.w3-margin-top
-                button.w3-button.w3-border.w3-round-medium(type='submit') Vytvoř
+                button.w3-button.w3-border.w3-round-medium(type='submit') Create
 
         if errors
             ul

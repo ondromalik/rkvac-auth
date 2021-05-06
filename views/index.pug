@@ -6,33 +6,33 @@ block content
             div.w3-cell(style="width:80%")
                 h1= title
             div.w3-cell.w3-cell-middle.w3-center
-                h5 Přihlášen: #[i #{username}]
+                h5 Logged in: #[i #{username}]
             div.w3-cell.w3-cell-middle
                 a.w3-button.w3-hover-none(href="/logout")
                     i(class="fas fa-sign-out-alt fa-lg")
 
     div.w3-card-2.w3-centered(style="margin-left:13%;margin-right:13%;margin-top:16px")
         header.w3-container.w3-light-blue.w3-text-black.w3-padding
-            h3 Databáze
+            h3 Database
         div.w3-container.w3-padding-16
-            p(style="font-style:italic") Vítejte v databázi předmětů, vyučujících a ústavů. Do databáze jste byli přihlášeni pomocí systému RKVAC (Revocable Keyed-Verification Anonymous Credentials).
-            h4(style="font-weight: bold") Obsah databáze:
+            p(style="font-style:italic") Welcome to a database of classes, teachers and departments. You were logged into the database using RKVAC (Revocable Keyed-Verification Anonymous Credentials) system.
+            h4(style="font-weight: bold") Content of the database:
             table.w3-table-all
                 if error
-                    p Není možné načítat obsah z databáze
+                    p Failed to load the database
                 else
                     thead
                         tr.w3-light-gray
                             td.w3-left-align
-                                <a href='/classes'>Předměty</a>
+                                <a href='/classes'>Classes</a>
                             td !{data.class_count}
                     tr
                         td.w3-left-align
-                            <a href='/teachers'>Vyučující</a>
+                            <a href='/teachers'>Teachers</a>
                         td !{data.teacher_count}
                     tr
                         td.w3-left-align
-                            <a href='/departments'>Ústavy</a>
+                            <a href='/departments'>Departments</a>
                         td !{data.department_count}
         footer.w3-container.w3-light-gray.w3-right-align
-            h5 Jste přihlášen jako #[i #{username}]
+            h5 You are logged in as #[i #{username}]

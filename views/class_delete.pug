@@ -7,26 +7,26 @@ block content
             div.w3-cell(style="width:80%")
                 h1 #{title}: #{class_info.title}
             div.w3-cell.w3-cell-middle.w3-center
-                h5 Přihlášen: #[i #{username}]
+                h5 Logged in: #[i #{username}]
             div.w3-cell.w3-cell-middle
                 a.w3-button.w3-hover-none(href="/logout")
                     i(class="fas fa-sign-out-alt fa-lg")
 
     div.w3-container.w3-padding-16(style="margin-right:35%")
-        p #[strong Vyučující: ]
+        p #[strong Teacher: ]
             a(href=class_info.teacher.url) #{class_info.teacher.name}
-        p #[strong Zkratka: ] #{class_info.abbreviation}
-        p #[strong Ústav: ]
+        p #[strong Shortcut: ] #{class_info.abbreviation}
+        p #[strong Department: ]
             a(href=class_info.department.url) #{class_info.department.title}
-        p #[strong Popis předmětu: ] #{class_info.summary}
+        p #[strong Description: ] #{class_info.summary}
 
     div.w3-cell-row.w3-padding
         div.w3-cell
-            p Jste si jistý, že chcete vymazat tento předmět?
+            p Are you sure you want to delete this class?
         div.w3-cell
             form(method='POST' action='')
                 div.form-group
                     input#id.form-control(type='hidden', name='id', required='true', value=class_info._id )
 
-                button.w3-button.w3-border.w3-round-medium(type='submit') Vymaž
+                button.w3-button.w3-border.w3-round-medium(type='submit') Delete
         div.w3-cell(style="width:30%")

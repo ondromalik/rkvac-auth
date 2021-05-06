@@ -6,7 +6,7 @@ block content
             div.w3-cell(style="width:80%")
                 h1 #{title}
             div.w3-cell.w3-cell-middle.w3-center
-                h5 Přihlášen: #[i #{username}]
+                h5 Logged in: #[i #{username}]
             div.w3-cell.w3-cell-middle
                 a.w3-button.w3-hover-none(href="/logout")
                     i(class="fas fa-sign-out-alt fa-lg")
@@ -15,13 +15,13 @@ block content
         form.w3-container(method='POST' action='' style="padding-bottom: 16px")
             form.w3-container(method='POST' action='' style="padding-bottom: 16px")
                 div.form-group
-                    label(for='name') Zkratka:
-                    input#name.form-control(class="w3-input;w3-border;w3-round-medium" type='text', placeholder='UTKO, UJAZ atd.' name='name' value=(undefined === department ? '' : department.title))
+                    label(for='name') Shortcut:
+                    input#name.form-control(class="w3-input;w3-border;w3-round-medium" type='text', placeholder='UTKO, UJAZ etc.' name='name' value=(undefined === department ? '' : department.title))
                 div.form-group
-                    label(for='fullname') Název:
-                    input#fullname.form-control(class="w3-input;w3-border;w3-round-medium" type='text', placeholder='Ústav jazyků' name='fullname' value=(undefined === department ? '' : department.fullname))
+                    label(for='fullname') Title:
+                    input#fullname.form-control(class="w3-input;w3-border;w3-round-medium" type='text', placeholder='Department of languages' name='fullname' value=(undefined === department ? '' : department.fullname))
                 div.w3-right-align.w3-margin-top
-                    button.w3-button.w3-border.w3-round-medium(type='submit') Vytvoř
+                    button.w3-button.w3-border.w3-round-medium(type='submit') Create
 
             if errors
                 ul

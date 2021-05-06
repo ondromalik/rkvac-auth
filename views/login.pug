@@ -16,22 +16,22 @@ block content
     div.w3-container.w3-centered(style="width: 45%; margin: auto")
         div.w3-card-4
             div.w3-container.w3-light-blue.w3-padding
-                h2 Přihlášení
+                h2 Login
             div.w3-container.w3-padding
-                h4.w3-margin-bottom Zvolte čtečku:
+                h4.w3-margin-bottom Select a reader:
                 div.w3-center.w3-margin-top
-                    label.w3-text-red(id="cardStatus") Čtečka nedostupná
+                    label.w3-text-red(id="cardStatus") No available reader
                     div(id="readerList")
                 div.w3-container.w3-margin-top.w3-center
                     div(class="loader" id="card-loader" hidden=true)
-                    p.w3-text-green(id="cardConnected" hidden=true) Karta je funkční
-                    p.w3-text-red(id="cardDisconnected" hidden=true) Karta není funkční
-                label #[i Info: Kliknutím na čtečku ji otestujete.]
+                    p.w3-text-green(id="cardConnected" hidden=true) Card works properly
+                    p.w3-text-red(id="cardDisconnected" hidden=true) Card isn't working properly
+                label #[i Info: Clicking on the reader will test the card in it.]
                 div(id="reloadMessage")
-                    p #[i V případě nezobrazení čtečky je nutné restartovat doplněk "Smart Card Extension", nebo celý prohlížeč.]
+                    p #[i In case that your reader isn't listed, please reload Smart Card Extension or restart browser.]
             hr
             div.w3-container.w3-padding
-                h4 Přihlásit se jako:
+                h4 Log in as:
                 div.w3-cell-row.w3-center.w3-margin-top
                     div.w3-cell(style="width: 33%")
                         form(method='POST' action='/verify')
@@ -40,7 +40,7 @@ block content
                     div.w3-cell(style="width: 33%")
                         form(method='POST' action='/verify')
                             input.w3-input.w3-border.w3-round-medium(name="username" type='hidden' value='teacher')
-                            button.w3-button.w3-border.w3-round-medium.w3-padding-small(name='userrole' type='submit' value='teacher' id='teacherButton' disabled=true) Vyučující
+                            button.w3-button.w3-border.w3-round-medium.w3-padding-small(name='userrole' type='submit' value='teacher' id='teacherButton' disabled=true) Teacher
                     div.w3-cell(style="width: 33%")
                         form(method='POST' action='/verify')
                             input.w3-input.w3-border.w3-round-medium(name="username" type='hidden' value='student')
@@ -51,17 +51,17 @@ block content
                     label.w3-text-red(id="login-alert")= message
             hr
             div.w3-container.w3-padding
-                button.w3-button.w3-padding-small(onclick='showPanel("showLogin")') #[i Lokální přihlášení]
+                button.w3-button.w3-padding-small(onclick='showPanel("showLogin")') #[i Local authentication]
 
                 form.w3-container.w3-margin-top(action="/login" method="POST" style="padding-bottom: 16px" class="w3-hide" id="showLogin")
                     p
-                        label Jméno
+                        label Username
                         input.w3-input.w3-border.w3-round-medium(name="username")
                     p
-                        label Heslo
+                        label Password
                         input.w3-input.w3-border.w3-round-medium(type="password" name="password")
                     p
-                        input.w3-button.w3-border.w3-round-medium.w3-padding-small.w3-light-blue.w3-border-dark-gray(type="submit" value="Přihlásit")
+                        input.w3-button.w3-border.w3-round-medium.w3-padding-small.w3-light-blue.w3-border-dark-gray(type="submit" value="Log in")
 
 
     script(src='login.js')

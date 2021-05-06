@@ -4,9 +4,9 @@ block content
     div.w3-container.w3-gray
         div.w3-cell-row
             div.w3-cell(style="width:80%")
-                h1 Přístupové logy
+                h1 Access logs
             div.w3-cell.w3-cell-middle.w3-center
-                h5 Přihlášen: #[i #{username}]
+                h5 Logged in: #[i #{username}]
             div.w3-cell.w3-cell-middle
                 a.w3-button.w3-hover-none(href="/logout")
                     i(class="fas fa-sign-out-alt fa-lg")
@@ -14,7 +14,7 @@ block content
     div.w3-panel
         a.w3-button.w3-circle.w3-hover-white(id="btnRefreshLog")
             i(class="fas fa-sync-alt")
-        label(id="updatedDate").w3-text-gray Aktualizováno: nikdy
+        label(id="updatedDate").w3-text-gray Last updated: never
         div(class="logTable" data-url="/refreshLog")
 
     script(src="log.js")

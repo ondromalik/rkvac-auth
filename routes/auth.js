@@ -63,7 +63,7 @@ passport.use('verify', new LocalStrategy(
     {passwordField: 'userrole', passReqToCallback: true},
     function (req, username, password, done) {
         if (rkvacUsed) {
-            done(null, false, {message: 'RKVAC knihovna je práve používána, skuste za chvíli'});
+            done(null, false, {message: 'RKVAC library is currently in use, please try later.'});
             return;
         }
         rkvacUsed = true;
@@ -86,7 +86,7 @@ passport.use('verify', new LocalStrategy(
         fs.readFile(positionFile, 'utf-8', (err, data) => {
             if (err) {
                 console.log(err);
-                done(null, false, {message: 'Přístup odepřen - chyba v RKVAC'});
+                done(null, false, {message: 'Request failed - RKVAC error'});
                 rkvacUsed = false;
                 return;
             }
@@ -96,10 +96,10 @@ passport.use('verify', new LocalStrategy(
                     console.log(`stdout: ${stdout}`);
                     console.log(`error: ${error.message}`);
                     if (error.message.includes('ACCESS DENIED')) {
-                        done(null, false, {message: 'Přístup odepřen'});
+                        done(null, false, {message: 'ACCESS DENIED'});
                     }
                     else {
-                        done(null, false, {message: 'Požadavek se nezdařil'});
+                        done(null, false, {message: 'Request failed'});
                     }
                     rkvacUsed = false;
                     return;
@@ -107,7 +107,7 @@ passport.use('verify', new LocalStrategy(
                 if (stderr) {
                     console.log(`stderr: ${stderr}`);
                     console.log(`stdout: ${stdout}`);
-                    done(null, false, {message: 'Požadavek se nezdařil'});
+                    done(null, false, {message: 'Request failed'});
                     rkvacUsed = false;
                     return;
                 }
