@@ -762,7 +762,7 @@ function loadLogs(userFile) {
 
 router.get('/refreshLog', require('permission')(['admin']), function (req, res) {
     logData.rows = [];
-    loadLogs('./ve_requests.log').then((data) => {
+    loadLogs('./data/Verifier/ve_requests.log').then((data) => {
         res.json({
             headers: data.headers,
             rows: data.rows
