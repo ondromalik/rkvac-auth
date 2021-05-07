@@ -723,25 +723,36 @@ function loadLogs(userFile) {
     return new Promise((resolve, reject) => {
         try {
             let i = 0;
+            let count = 0;
             const fileStream = fs.createReadStream(userFile).on('error', reject);
             readline.createInterface({
                 input: fileStream,
                 console: false
-            }).on('line', function (line) {
-                if (line !== '' && i < 50) {
-                    let words = line.split(' ').map(String);
-                    if (words[2] === '') {
-                        words.splice(2, 1);
-                    }
-                    words[0] += ' ' + words[1] + ' ' + words[2] + ' ' + words[4];
-                    words.splice(1, 2);
-                    words.splice(2, 1);
-                    words.splice(4, 1);
-                    logData.rows.push(words);
-                    i++;
+            }).on('line', (line) => {
+                if (line !== '') {
+                    count++;
                 }
-            }).on('close', function () {
-                resolve(logData);
+            }).on('close', () => {
+                const fileStreamSecond = fs.createReadStream(userFile).on('error', reject);
+                readline.createInterface({
+                    input: fileStreamSecond,
+                    console: false
+                }).on('line', function (line) {
+                    if (line !== '' && i >= count - 50) {
+                        let words = line.split(' ').map(String);
+                        if (words[2] === '') {
+                            words.splice(2, 1);
+                        }
+                        words[0] += ' ' + words[1] + ' ' + words[2] + ' ' + words[4];
+                        words.splice(1, 2);
+                        words.splice(2, 1);
+                        words.splice(4, 1);
+                        logData.rows.push(words);
+                    }
+                    i++;
+                }).on('close', function () {
+                    resolve(logData);
+                });
             });
         } catch (e) {
             reject(e);
@@ -751,7 +762,7 @@ function loadLogs(userFile) {
 
 router.get('/refreshLog', require('permission')(['admin']), function (req, res) {
     logData.rows = [];
-    loadLogs('./data/Verifier/ve_requests.log').then((data) => {
+    loadLogs('./ve_requests.log').then((data) => {
         res.json({
             headers: data.headers,
             rows: data.rows
