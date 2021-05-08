@@ -21,8 +21,5 @@ Access permission are divided into 3 levels, based on attributes that user holds
   `npm run serverstart`
 - server runs on https://localhost:8443
 
-## User manual:
-- in progress
-
 ## Contact:
 xmalik19@stud.feec.vutbr.cz
