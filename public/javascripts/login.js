@@ -1,5 +1,6 @@
 {
     document.getElementById('adminButton').addEventListener('click', () => {
+        console.log(Date.now());
         startLoader();
         let tableRows = document.getElementsByClassName('cardSelector');
         let selectedCard = "";

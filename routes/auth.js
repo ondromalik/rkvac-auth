@@ -62,6 +62,7 @@ let rkvacUsed = false;
 passport.use('verify', new LocalStrategy(
     {passwordField: 'userrole', passReqToCallback: true},
     function (req, username, password, done) {
+        let startTime = Date.now();
         if (rkvacUsed) {
             done(null, false, {message: 'RKVAC library is currently in use, please try later.'});
             return;
@@ -115,6 +116,7 @@ passport.use('verify', new LocalStrategy(
                 for (user of userDB.user) {
                     if (user.username === username) {
                         rkvacUsed = false;
+                        console.log(Date.now() - startTime);
                         return done(null, user);
                     }
                 }
