@@ -1,6 +1,4 @@
 {
-    console.log(Date.now());
-
     async function refreshTable(root) {
         // console.log("Table refreshed!");
 
