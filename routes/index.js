@@ -6,6 +6,7 @@ var auth = require('./auth.js');
 var flash = require('connect-flash');
 const multer = require("multer");
 const fs = require('fs');
+const fse = require('fs-extra');
 var path = require('path');
 const {exec} = require("child_process");
 const net = require('net');
@@ -701,13 +702,13 @@ router.post('/destroyEpoch', require('permission')(['admin']), (req, res) => {
 });
 
 router.post('/deleteData', require('permission')(['admin']), (req, res) => {
-    fs.rmdir('./data', {recursive: true}, err => {
+    fse.move('./data', '/tmp/data/', {overwrite: true}, (err) => {
         if (err) {
             console.log(err);
             res.json({success: false});
             return;
         }
-        logOutput("RKVAC reseted", err);
+        logOutput("RKVAC reseted");
         res.json({success: true});
     });
 });
