@@ -32,7 +32,7 @@ router.use(flash());
 
 function logOutput(stdout, err, stderr) {
     let date = new Date();
-    let dateFormat = date.getFullYear() + '/' + (date.getMonth() < 10 ? '0' : '') + date.getMonth() + '/' + (date.getDate() < 10 ? '0' : '') + date.getDate() + ' ' +
+    let dateFormat = date.getFullYear() + '/' + (date.getMonth() < 10 ? '0' : '') + (date.getMonth() + 1) + '/' + (date.getDate() < 10 ? '0' : '') + date.getDate() + ' ' +
         date.getHours() + ":" + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes() + ":" + (date.getSeconds() < 10 ? '0' : '') + date.getSeconds() + ' ';
     if (err) {
         stdout += '\n' + 'error: ' + err;
